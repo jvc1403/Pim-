@@ -1,2 +1,2 @@
 # Pim-
-Pim segundo semeatre
+Pim segundo semestre
