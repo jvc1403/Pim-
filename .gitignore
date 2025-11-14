@@ -1,0 +1,72 @@
+# Sistema / OS
+Thumbs.db
+ehthumbs.db
+.DS_Store
+
+# VS Code
+.vscode/
+.history
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyc
+*.pyo
+*.pyd
+env/
+venv/
+ENV/
+.venv/
+pip-wheel-metadata/
+.pytest_cache/
+.mypy_cache/
+.coverage
+htmlcov/
+dist/
+build/
+*.egg-info/
+*.egg
+*.sqlite3
+*.log
+instance/
+.webassets-cache
+
+# Node / frontend
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnp/
+.pnp.js
+dist/
+build/
+coverage/
+.env
+.env.local
+.env.*.local
+
+# Logs / temp
+logs/
+*.log
+*.tmp
+*.bak
+
+# Docker
+docker-compose.override.yml
+.docker/
+
+# IDEs / editors
+.idea/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Coverage
+coverage.xml
+coverage/
+
+# Outros
+*.swp
+*.lock

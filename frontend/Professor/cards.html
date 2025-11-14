@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Painel do Professor</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+:root {
+  --text: #fff;
+  --dark: #000;
+  --panel: #111;
+  --gray: #1a1a1a;
+  --border: #222;
+  --radius: 14px;
+  --transition: all 0.3s ease;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: 'Inter', sans-serif;
+  color: var(--text);
+  display: flex;
+  min-height: 100vh;
+  background-color: #000;
+  background-image:
+    linear-gradient(30deg, #111111 12%, transparent 12.5%, transparent 87%, #111111 87.5%, #111111),
+    linear-gradient(150deg, #111111 12%, transparent 12.5%, transparent 87%, #111111 87.5%, #111111),
+    linear-gradient(30deg, #111111 12%, transparent 12.5%, transparent 87%, #111111 87.5%, #111111),
+    linear-gradient(150deg, #111111 12%, transparent 12.5%, transparent 87%, #111111 87.5%, #111111),
+    linear-gradient(60deg, #77777777 25%, transparent 25.5%, transparent 75%, #77777777 75%, #77777777),
+    linear-gradient(60deg, #77777777 25%, transparent 25.5%, transparent 75%, #77777777 75%, #77777777);
+  background-position: 0 0, 0 0, 40px 70px, 40px 70px, 0 0, 40px 70px;
+  background-size: 80px 140px;
+  box-shadow: inset 0 0 100px rgba(255, 255, 255, 0.05);
+}
+
+/* === SIDEBAR === */
+.sidebar {
+  width: 260px;
+  background: rgba(10,10,10,0.9);
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  transition: width 0.35s ease;
+  position: relative;
+  z-index: 10;
+  backdrop-filter: blur(6px);
+}
+.sidebar.collapsed { width: 90px; }
+
+.toggle-btn {
+  position: absolute;
+  top: 20px;
+  right: -18px;
+  background: #111;
+  border: 1px solid #555;
+  color: #fff;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: var(--transition);
+  z-index: 20;
+}
+.toggle-btn:hover {
+  background: #fff;
+  color: #000;
+  transform: scale(1.1);
+}
+
+nav {
+  display: flex;
+  flex-direction: column;
+  margin-top: 80px;
+}
+.nav-link {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 22px;
+  color: #ccc;
+  text-decoration: none;
+  border-radius: 10px;
+  margin: 4px 12px;
+  transition: var(--transition);
+}
+.nav-link:hover {
+  background: rgba(255,255,255,0.1);
+  color: #fff;
+}
+.nav-link.active {
+  background: rgba(255,255,255,0.2);
+  box-shadow: inset 3px 0 0 #fff;
+}
+.nav-icon { width: 24px; text-align: center; font-size: 18px; }
+.sidebar.collapsed .nav-link { justify-content: center; padding: 14px 0; }
+.sidebar.collapsed .nav-text { display: none; }
+
+/* === MAIN === */
+.main { flex: 1; padding: 40px; position: relative; }
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+  border-bottom: 1px solid var(--border);
+}
+.header h1 {
+  font-family: 'Orbitron';
+  font-size: 26px;
+  color: #fff;
+  display: flex;
+  align-items: center;
+}
+
+/* BOTÃO SAIR */
+.logout-btn {
+  background: transparent;
+  border: 1px solid #fff;
+  color: #fff;
+  font-size: 15px;
+  padding: 8px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: var(--transition);
+}
+.logout-btn:hover {
+  background: #fff;
+  color: #000;
+}
+
+/* === CARDS === */
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 20px;
+  margin-bottom: 30px;
+}
+.card {
+  background: rgba(15,15,15,0.85);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 25px;
+  text-align: center;
+  box-shadow: 0 0 25px rgba(255,255,255,0.05);
+  transition: var(--transition);
+}
+.card:hover { transform: translateY(-4px); border-color: #aaa; }
+.card h3 { color: #bbb; font-size: 14px; margin-bottom: 10px; }
+.card p { font-size: 30px; font-weight: 700; color: #fff; }
+
+/* === GRÁFICOS === */
+.graphs {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 25px;
+  margin-bottom: 35px;
+}
+.graph {
+  background: rgba(15,15,15,0.9);
+  border: 1px solid #333;
+  border-radius: var(--radius);
+  padding: 25px;
+  box-shadow: 0 0 30px rgba(255,255,255,0.05);
+}
+.chart-container {
+  background: rgba(0,0,0,0.6);
+  border-radius: 12px;
+  padding: 15px;
+  height: 320px;
+}
+
+/* === ATIVIDADES === */
+.activity {
+  background: rgba(15,15,15,0.85);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 25px;
+}
+.activity h3 { margin-bottom: 15px; color: #fff; }
+.activity-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 15px 0;
+  border-bottom: 1px solid var(--border);
+  color: #ccc;
+}
+.activity-item:last-child { border-bottom: none; }
+</style>
+</head>
+
+<body>
+  <div class="sidebar" id="sidebar">
+    <button class="toggle-btn" id="toggleBtn"><i class="fas fa-angle-left"></i></button>
+
+    <nav>
+      <a href="cards.html" class="nav-link active"><i class="fas fa-chart-pie nav-icon"></i><span class="nav-text">Dashboard</span></a>
+      <a href="atividades.html" class="nav-link"><i class="fas fa-file-alt nav-icon"></i><span class="nav-text">Atividades</span></a>
+      <a href="frequencia.html" class="nav-link"><i class="fas fa-user-check nav-icon"></i><span class="nav-text">Frequência</span></a>
+      <a href="notas.html" class="nav-link"><i class="fas fa-graduation-cap nav-icon"></i><span class="nav-text">Notas</span></a>
+      <a href="perfil.html" class="nav-link"><i class="fas fa-user nav-icon"></i><span class="nav-text">Perfil</span></a>
+      <a href="relatorios.html" class="nav-link"><i class="fas fa-chart-bar nav-icon"></i><span class="nav-text">Relatórios</span></a>
+      <a href="suporte.html" class="nav-link"><i class="fas fa-headset nav-icon"></i><span class="nav-text">Suporte</span></a>
+      <a href="turmas.html" class="nav-link"><i class="fas fa-users nav-icon"></i><span class="nav-text">Turmas</span></a>
+    </nav>
+  </div>
+
+  <div class="main">
+    <div class="header">
+      <h1>Painel do Professor</h1>
+      <button class="logout-btn" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Sair</button>
+    </div>
+
+    <div class="cards" id="cards">
+      <div class="card"><h3>Turmas Ativas</h3><p id="turmasAtivas">--</p></div>
+      <div class="card"><h3>Atividades</h3><p id="atividades">--</p></div>
+      <div class="card"><h3>Correções Pendentes</h3><p id="correcoes">--</p></div>
+      <div class="card"><h3>Média Geral</h3><p id="mediaGeral">--</p></div>
+    </div>
+
+    <div class="graphs">
+      <div class="graph"><div class="chart-container"><canvas id="notasChart"></canvas></div></div>
+      <div class="graph"><div class="chart-container"><canvas id="presencaChart"></canvas></div></div>
+    </div>
+
+    <div class="activity" id="atividadeContainer">
+      <h3>Atividades Recentes</h3>
+      <p>Carregando...</p>
+    </div>
+  </div>
+
+<script>
+const API_URL = "http://127.0.0.1:8000/api/dashboard"; // altere conforme seu backend
+
+// Sidebar toggle
+const sidebar = document.getElementById('sidebar');
+document.getElementById('toggleBtn').onclick = () => {
+  sidebar.classList.toggle('collapsed');
+  const icon = document.querySelector('#toggleBtn i');
+  icon.classList.toggle('fa-angle-left');
+  icon.classList.toggle('fa-angle-right');
+};
+
+function logout() {
+  if (confirm("Deseja realmente sair do sistema?")) {
+    window.location.href = "../login/index.html";
+  }
+}
+
+// === Fetch dos cards ===
+async function carregarResumo() {
+  try {
+    const res = await fetch(`${API_URL}/overview`);
+    const data = await res.json();
+    document.getElementById("turmasAtivas").textContent = data.turmas_ativas ?? 0;
+    document.getElementById("atividades").textContent = data.atividades ?? 0;
+    document.getElementById("correcoes").textContent = data.correcoes_pendentes ?? 0;
+    document.getElementById("mediaGeral").textContent = data.media_geral ?? "--";
+  } catch (err) {
+    console.error("Erro ao carregar resumo:", err);
+  }
+}
+
+// === Fetch do gráfico de notas ===
+async function carregarNotas() {
+  try {
+    const res = await fetch(`${API_URL}/notas`);
+    const data = await res.json();
+
+    new Chart(document.getElementById('notasChart'), {
+      type: 'line',
+      data: {
+        labels: data.meses ?? [],
+        datasets: [{
+          label: 'Média da Turma',
+          data: data.medias ?? [],
+          borderColor: '#00CED1',
+          backgroundColor: 'rgba(0,206,209,0.2)',
+          fill: true,
+          tension: 0.4,
+          borderWidth: 3,
+          pointBackgroundColor: '#00CED1',
+          pointRadius: 6
+        }]
+      },
+      options: {
+        plugins: { legend: { labels: { color: '#fff' } } },
+        scales: {
+          x: { ticks: { color: '#ccc' }, grid: { color: '#222' } },
+          y: { ticks: { color: '#ccc' }, grid: { color: '#222' }, min: 5, max: 10 }
+        }
+      }
+    });
+  } catch (err) {
+    console.error("Erro ao carregar notas:", err);
+  }
+}
+
+// === Fetch do gráfico de presença ===
+async function carregarPresencas() {
+  try {
+    const res = await fetch(`${API_URL}/presencas`);
+    const data = await res.json();
+
+    new Chart(document.getElementById('presencaChart'), {
+      type: 'doughnut',
+      data: {
+        labels: ['Presentes', 'Justificadas', 'Faltas'],
+        datasets: [{
+          data: [data.presentes, data.justificadas, data.faltas],
+          backgroundColor: ['#00D97E', '#FFB100', '#E74C3C'],
+          borderColor: '#000',
+          borderWidth: 2
+        }]
+      },
+      options: {
+        plugins: {
+          legend: { position: 'bottom', labels: { color: '#fff' } }
+        },
+        cutout: '65%'
+      }
+    });
+  } catch (err) {
+    console.error("Erro ao carregar presenças:", err);
+  }
+}
+
+// === Atividades recentes ===
+async function carregarAtividades() {
+  try {
+    const res = await fetch(`${API_URL}/atividades`);
+    const data = await res.json();
+
+    const container = document.getElementById("atividadeContainer");
+    container.innerHTML = "<h3>Atividades Recentes</h3>";
+    data.forEach(a => {
+      container.innerHTML += `
+        <div class="activity-item">
+          <div>${a.icone ?? "📘"} ${a.descricao}</div>
+          <small>${a.tempo ?? ""}</small>
+        </div>`;
+    });
+  } catch (err) {
+    console.error("Erro ao carregar atividades:", err);
+  }
+}
+
+// === Inicialização ===
+carregarResumo();
+carregarNotas();
+carregarPresencas();
+carregarAtividades();
+</script>
+</body>
+</html>

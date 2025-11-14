@@ -1,0 +1,108 @@
+/* Fundo animado geométrico discreto */
+.container {
+  width: 100%;
+  height: 100%;
+  --s: 200px;
+  --c1: #1a1a1a;
+  --c2: #242424;
+  --c3: #2e2e2e;
+  background: repeating-conic-gradient(
+        from 30deg,
+        #0000 0 120deg,
+        var(--c3) 0 180deg
+      )
+      calc(0.5 * var(--s)) calc(0.5 * var(--s) * 0.577),
+    repeating-conic-gradient(
+      from 30deg,
+      var(--c1) 0 60deg,
+      var(--c2) 0 120deg,
+      var(--c3) 0 180deg
+    );
+  background-size: var(--s) calc(var(--s) * 0.577);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  animation: bgMove 12s linear infinite;
+}
+
+@keyframes bgMove {
+  0% { background-position: 0 0; }
+  100% { background-position: 180px 100px; }
+}
+
+/* Caixa de login / cadastro */
+.login-box {
+  background: rgba(0, 0, 0, 0.65);
+  padding: 40px 50px;
+  border-radius: 15px;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.6);
+  text-align: center;
+  width: 350px;
+}
+
+.login-box h1 {
+  font-size: 1.6rem;
+  margin-bottom: 25px;
+  color: #f0f0f0;
+}
+
+/* Inputs */
+.login-box input {
+  width: 100%;
+  margin: 10px 0;
+  padding: 10px;
+  border: 1.5px solid #444;
+  background: #1c1c1c;
+  color: #e0e0e0;
+  border-radius: 8px;
+  outline: none;
+  transition: 0.3s;
+}
+
+.login-box input:focus {
+  border-color: #888;
+  background: #222;
+}
+
+/* Botão */
+.btn-login {
+  width: 100%;
+  padding: 12px;
+  background: #444;
+  color: #f0f0f0;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  margin-top: 10px;
+  transition: 0.3s;
+}
+
+.btn-login:hover {
+  background: #666;
+}
+
+/* Links */
+.links {
+  display: flex;
+  flex-direction: column;
+  margin-top: 15px;
+}
+
+.links a {
+  color: #bcbcbc;
+  text-decoration: none;
+  margin: 4px 0;
+  transition: 0.3s;
+}
+
+.links a:hover {
+  color: #fff;
+}
+
+/* Responsividade */
+@media (max-width: 450px) {
+  .login-box {
+    width: 90%;
+    padding: 30px 25px;
+  }
+}

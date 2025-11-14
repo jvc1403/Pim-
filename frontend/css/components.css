@@ -1,0 +1,33 @@
+/* Botões de escolha (professor/aluno) */
+.radio-input {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin-bottom: 15px;
+}
+
+.radio-input .label {
+  position: relative;
+  padding: 10px 20px;
+  border: 1.5px solid #555;
+  border-radius: 8px;
+  cursor: pointer;
+  color: #e0e0e0;
+  transition: 0.3s;
+}
+
+.radio-input .label:hover {
+  background: #222;
+}
+
+.radio-input input[type="radio"] {
+  display: none;
+}
+
+.radio-input input[type="radio"]:checked + .text {
+  background: #333;
+  border-radius: 5px;
+  padding: 2px 10px;
+  color: #fff;
+  animation: pulse 1.5s ease-in-out infinite;
+}

@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Suporte do Aluno - CyberClass</title>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+
+<style>
+/* ====================================== */
+/* VARIÁVEIS */
+/* ====================================== */
+:root {
+  --bg-dark: #0d0d0d;
+  --panel: #161616;
+  --border: #222;
+  --primary: #00aaff;
+  --primary-light: #68d1ff;
+  --text: #fff;
+  --radius: 16px;
+}
+
+/* ====================================== */
+/* RESET */
+/* ====================================== */
+* {
+  margin: 0; padding: 0; box-sizing: border-box;
+}
+body {
+  font-family: "Poppins", sans-serif;
+  background: var(--bg-dark);
+  color: var(--text);
+  display: flex;
+}
+
+/* ====================================== */
+/* SIDEBAR — exatamente igual às outras telas */
+/* ====================================== */
+.sidebar {
+  width: 260px;
+  background: #111;
+  height: 100vh;
+  border-right: 1px solid var(--border);
+  padding-top: 40px;
+  position: fixed;
+  transition: .3s ease;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* LOGO */
+.logo {
+  width: 130px;
+  filter: drop-shadow(0 0 8px rgba(255,255,255,0.2));
+  animation: pulse 3.5s infinite ease-in-out;
+}
+
+@keyframes pulse {
+  0%,100% { transform: scale(1); opacity:.9; }
+  50% { transform: scale(1.06); opacity:1; }
+}
+
+.sidebar h1 {
+  margin-top: 10px;
+  margin-bottom: 25px;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+/* BOTÃO COLAPSAR */
+.toggle-btn {
+  position: absolute;
+  top: 20px;
+  right: -18px;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: #0f0f0f;
+  border: 1px solid #444;
+  color:#fff;
+  cursor:pointer;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  transition:.3s;
+}
+.toggle-btn:hover {
+  background:#fff; color:#000; transform:scale(1.1);
+}
+
+/* LINKS */
+nav {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  padding-top: 15px;
+}
+
+.nav-link {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 14px 25px;
+  margin: 4px 12px;
+  border-radius: 10px;
+  text-decoration: none;
+  color: #bbb;
+  transition: .25s;
+}
+.nav-link:hover {
+  background: #222;
+  color: #fff;
+}
+.nav-link.active {
+  background: #333;
+  color: #fff;
+  box-shadow: inset 3px 0 #00aaff;
+}
+
+.nav-icon { width: 22px; text-align:center; }
+
+/* COLAPSADO */
+.sidebar.collapsed { width: 90px; }
+.sidebar.collapsed .logo { width: 60px; }
+.sidebar.collapsed h1 { display:none; }
+.sidebar.collapsed .nav-text { display:none; }
+.sidebar.collapsed .nav-link { justify-content:center; padding: 14px 0; }
+
+/* ====================================== */
+/* ÁREA PRINCIPAL */
+/* ====================================== */
+.main {
+  width: 100%;
+  height: 100vh;
+  margin-left: 260px;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  transition:.3s;
+}
+.sidebar.collapsed ~ .main {
+  margin-left: 90px;
+}
+
+/* ====================================== */
+/* CHAT BOX — reduzido e centralizado */
+/* ====================================== */
+.chat-box {
+  width: 360px;
+  height: 500px;
+  background: #141414;
+  border-radius: 20px;
+  overflow:hidden;
+  box-shadow: 0 0 25px rgba(0,0,0,0.7);
+  display:flex;
+  flex-direction:column;
+  animation: fade .6s ease;
+}
+
+@keyframes fade {
+  from { opacity:0; transform:translateY(10px); }
+  to { opacity:1; }
+}
+
+/* HEADER */
+.header {
+  background: var(--primary);
+  padding: 14px;
+  display:flex;
+  align-items:center;
+  gap:12px;
+  color:#fff;
+}
+
+.header img {
+  width:42px;
+  height:42px;
+  border-radius:50%;
+  border:2px solid #fff;
+}
+
+/* CONVERSA */
+#conversation {
+  flex:1;
+  padding:15px;
+  background:#0f0f0f;
+  overflow-y:auto;
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
+
+/* MENSAGENS */
+.msg {
+  max-width:80%;
+  padding:10px 14px;
+  border-radius:var(--radius);
+  font-size:14px;
+  line-height:1.4;
+}
+.msg.bot { background:#1c1c1c; color:#ddd; align-self:flex-start; }
+.msg.user { background:#00aaff; color:#fff; align-self:flex-end; }
+
+/* DIGITANDO */
+.typing {
+  display:flex; gap:4px;
+  padding:8px 12px;
+  background:#1a1a1a;
+  border-radius:var(--radius);
+}
+.dot {
+  width:6px; height:6px;
+  background:#aaa;
+  border-radius:50%;
+  animation: blink 1.3s infinite;
+}
+.dot:nth-child(2){ animation-delay:.2s; }
+.dot:nth-child(3){ animation-delay:.4s; }
+
+@keyframes blink {
+  0%,100% {opacity:0;}
+  40% {opacity:1;}
+}
+
+/* INPUT */
+form {
+  display:flex;
+  padding:12px;
+  background:#111;
+  border-top:1px solid #222;
+  gap:10px;
+}
+
+form input {
+  flex:1; background:#1c1c1c; border:none;
+  border-radius:var(--radius);
+  padding:10px; color:#fff;
+}
+form button {
+  padding:10px 18px;
+  background: var(--primary);
+  border:none;
+  border-radius:var(--radius);
+  color:white;
+  font-weight:600;
+  cursor:pointer;
+  transition:.3s;
+}
+form button:hover {
+  background: var(--primary-light);
+  transform:scale(1.05);
+}
+</style>
+</head>
+
+<body>
+
+<!-- ====================================================== -->
+<!-- SIDEBAR -->
+<!-- ====================================================== -->
+<div class="sidebar" id="sidebar">
+  <button class="toggle-btn" id="toggleBtn"><i class="fas fa-angle-left"></i></button>
+
+  <img src="../assets/images/logo_icon.png" class="logo">
+  <h1>Painel do Aluno</h1>
+
+  <nav>
+    <a href="cards.html" class="nav-link"><i class="fas fa-home nav-icon"></i><span class="nav-text">Início</span></a>
+    <a href="atividades.html" class="nav-link"><i class="fas fa-file-alt nav-icon"></i><span class="nav-text">Atividades</span></a>
+    <a href="frequencia.html" class="nav-link"><i class="fas fa-user-check nav-icon"></i><span class="nav-text">Frequência</span></a>
+    <a href="notas.html" class="nav-link"><i class="fas fa-graduation-cap nav-icon"></i><span class="nav-text">Notas</span></a>
+    <a href="perfil.html" class="nav-link"><i class="fas fa-user nav-icon"></i><span class="nav-text">Perfil</span></a>
+    <a href="suporte.html" class="nav-link active"><i class="fas fa-headset nav-icon"></i><span class="nav-text">Suporte</span></a>
+  </nav>
+</div>
+
+<!-- ====================================================== -->
+<!-- MAIN - CHAT CENTRALIZADO -->
+<!-- ====================================================== -->
+<div class="main">
+
+  <div class="chat-box">
+
+    <div class="header">
+      <img src="https://cdn-icons-png.flaticon.com/512/4333/4333609.png" alt="avatar">
+      <div>
+        <strong>Assistente CyberClass</strong><br>
+        <span style="font-size:12px;">🟢 Online agora</span>
+      </div>
+    </div>
+
+    <div id="conversation">
+      <div class="msg bot">
+        Olá aluno(a)! 👋<br>
+        Sou o assistente virtual da CyberClass.<br>
+        Como posso ajudar hoje?
+      </div>
+    </div>
+
+    <form id="chat-form">
+      <input type="text" name="q" placeholder="Digite sua dúvida..." autocomplete="off">
+      <button>Enviar</button>
+    </form>
+
+  </div>
+
+</div>
+
+<script>
+// =============================================
+// Sidebar toggle
+// =============================================
+const sidebar = document.getElementById("sidebar");
+document.getElementById("toggleBtn").onclick = () => {
+  sidebar.classList.toggle("collapsed");
+  document.querySelector("#toggleBtn i").classList.toggle("fa-angle-right");
+};
+
+// =============================================
+// Chat conectado ao backend
+// =============================================
+const conv = document.getElementById("conversation");
+const form = document.getElementById("chat-form");
+
+form.addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const input = e.target.q;
+  const text = input.value.trim();
+  if (!text) return;
+
+  conv.insertAdjacentHTML("beforeend", `<div class='msg user'>${text}</div>`);
+  conv.scrollTop = conv.scrollHeight;
+  input.value = "";
+
+  const typing = document.createElement("div");
+  typing.className = "typing";
+  typing.innerHTML = "<span class='dot'></span><span class='dot'></span><span class='dot'></span>";
+  conv.appendChild(typing);
+  conv.scrollTop = conv.scrollHeight;
+
+  try {
+    const res = await fetch("http://127.0.0.1:8000/api/suporte/aluno", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ pergunta: text })
+    });
+
+    const data = await res.json();
+
+    setTimeout(() => {
+      typing.remove();
+      conv.insertAdjacentHTML("beforeend", `<div class='msg bot'>${data.resposta}</div>`);
+      conv.scrollTop = conv.scrollHeight;
+    }, 600);
+  } catch {
+    typing.remove();
+    conv.insertAdjacentHTML("beforeend", `<div class='msg bot'>❌ Erro ao conectar ao suporte.</div>`);
+  }
+});
+</script>
+
+</body>
+</html>

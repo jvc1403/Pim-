@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Consultar Notas</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<style>
+:root {
+  --text: #fff;
+  --dark: #000;
+  --panel: #111;
+  --gray: #1a1a1a;
+  --border: #222;
+  --radius: 14px;
+  --transition: all 0.3s ease;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'Inter', sans-serif;
+  color: var(--text);
+  display: flex;
+  min-height: 100vh;
+  background: #000;
+}
+
+/* =================== SIDEBAR =================== */
+.sidebar {
+  width: 260px;
+  background: rgba(10,10,10,0.9);
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  inset: 0 auto 0 0;
+  transition: width .35s ease;
+  backdrop-filter: blur(6px);
+}
+.sidebar.collapsed { width: 90px; }
+
+.toggle-btn {
+  position: absolute;
+  top: 20px;
+  right: -18px;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  border: 1px solid #555;
+  background: #111;
+  color: white;
+  cursor: pointer;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  transition: .3s;
+}
+.toggle-btn:hover { background:white; color:black; }
+
+nav { margin-top:80px; display:flex; flex-direction:column; }
+.nav-link {
+  padding:14px 22px;
+  display:flex; align-items:center; gap:14px;
+  color:#bbb; text-decoration:none;
+  border-radius:10px;
+  margin:4px 12px;
+  transition:.3s;
+}
+.nav-link:hover { background:rgba(255,255,255,0.1); color:white; }
+.nav-link.active { background:rgba(255,255,255,0.2); box-shadow:inset 3px 0 white; }
+.sidebar.collapsed .nav-text { display:none; }
+.sidebar.collapsed .nav-link { justify-content:center; }
+
+/* =================== MAIN =================== */
+.main {
+  flex: 1;
+  padding: 40px;
+  margin-left: 260px;
+  transition:.35s;
+}
+.sidebar.collapsed ~ .main { margin-left: 90px; }
+
+.header {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  border-bottom: 1px solid var(--border);
+  margin-bottom:25px;
+  padding-bottom:12px;
+}
+.header h1 {
+  font-family:'Orbitron';
+  font-size:26px;
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+
+/* =================== CARD PRINCIPAL =================== */
+.notas-card {
+  width:100%;
+  background: rgba(255,255,255,0.03);
+  padding:30px;
+  border-radius:20px;
+  border:1px solid rgba(255,255,255,0.06);
+  box-shadow:0 0 25px rgba(0,0,0,0.6);
+}
+
+/* =================== TABELA ESTILIZADA =================== */
+table {
+  width:100%;
+  border-collapse:collapse;
+  margin-top:10px;
+  font-size:15px;
+}
+
+th {
+  padding:14px;
+  background:rgba(255,255,255,0.08);
+  font-size:13px;
+  letter-spacing:1px;
+  text-transform:uppercase;
+}
+
+tbody tr:nth-child(odd) td {
+  background:rgba(255,255,255,0.04);
+}
+tbody tr:nth-child(even) td {
+  background:rgba(255,255,255,0.02);
+}
+
+td {
+  padding:12px;
+  border-bottom:1px solid rgba(255,255,255,0.06);
+  transition:.25s;
+}
+
+tbody tr:hover td {
+  background:rgba(255,255,255,0.12) !important;
+  transform:scale(1.01);
+}
+
+td b {
+  font-size:15px;
+  color:#fff;
+}
+
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<div class="sidebar" id="sidebar">
+  <button class="toggle-btn" id="toggleBtn"><i class="fas fa-angle-left"></i></button>
+
+  <nav>
+    <a href="cards.html" class="nav-link"><i class="fas fa-home nav-icon"></i><span class="nav-text">Início</span></a>
+    <a href="atividades.html" class="nav-link"><i class="fas fa-file-alt nav-icon"></i><span class="nav-text">Atividades</span></a>
+    <a href="frequencia.html" class="nav-link"><i class="fas fa-user-check nav-icon"></i><span class="nav-text">Frequência</span></a>
+    <a href="notas.html" class="nav-link active"><i class="fas fa-graduation-cap nav-icon"></i><span class="nav-text">Notas</span></a>
+    <a href="perfil.html" class="nav-link"><i class="fas fa-user nav-icon"></i><span class="nav-text">Perfil</span></a>
+    <a href="suporte.html" class="nav-link"><i class="fas fa-headset nav-icon"></i><span class="nav-text">Suporte</span></a>
+  </nav>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+  <div class="header">
+    <h1><i class="fas fa-graduation-cap"></i> Consultar Notas</h1>
+  </div>
+
+  <div class="notas-card">
+    <table id="notasTable">
+      <thead>
+        <tr>
+          <th>Disciplina</th>
+          <th>Turma</th>
+          <th>Ano</th>
+          <th>1º Bim</th>
+          <th>2º Bim</th>
+          <th>3º Bim</th>
+          <th>4º Bim</th>
+          <th>Média</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
+</div>
+
+<script>
+// Sidebar toggle
+document.getElementById("toggleBtn").onclick = () => {
+  const side = document.getElementById("sidebar");
+  side.classList.toggle("collapsed");
+
+  const icon = document.querySelector("#toggleBtn i");
+  icon.classList.toggle("fa-angle-left");
+  icon.classList.toggle("fa-angle-right");
+};
+
+// Backend + dados simulados
+const API_URL = "http://127.0.0.1:8000/api/notas";
+const tabela = document.querySelector("#notasTable tbody");
+
+function adicionarLinha(d) {
+  const media = (d.notas.reduce((a,b)=>a+b,0) / 4).toFixed(2);
+
+  tabela.innerHTML += `
+    <tr>
+      <td>${d.disciplina}</td>
+      <td>${d.turma}</td>
+      <td>${d.ano}</td>
+      <td>${d.notas[0]}</td>
+      <td>${d.notas[1]}</td>
+      <td>${d.notas[2]}</td>
+      <td>${d.notas[3]}</td>
+      <td><b>${media}</b></td>
+    </tr>
+  `;
+}
+
+async function carregarNotas() {
+  let dados = [
+    {disciplina:"Matemática", turma:"3A", ano:"2025", notas:[8.5,9.0,7.5,9.2]},
+    {disciplina:"Português", turma:"3A", ano:"2025", notas:[7.0,8.5,8.0,9.0]},
+    {disciplina:"Física", turma:"3A", ano:"2025", notas:[6.0,6.5,7.0,8.2]},
+  ];
+
+  try {
+    const res = await fetch(API_URL);
+    if (res.ok) dados = await res.json();
+  } catch {}
+
+  dados.forEach(adicionarLinha);
+}
+
+carregarNotas();
+</script>
+</body>
+</html>

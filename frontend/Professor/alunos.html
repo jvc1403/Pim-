@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Alunos da Turma - CyberClass</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --bg: #0d0d0d;
+  --panel: rgba(20,20,20,0.95);
+  --border: #2a2a2a;
+  --text: #fff;
+  --accent: #fff;
+  --radius: 16px;
+  --transition: all 0.3s ease;
+}
+
+* {margin:0; padding:0; box-sizing:border-box;}
+body {
+  font-family:'Poppins',sans-serif;
+  color:var(--text);
+  background:var(--bg);
+  display:flex;
+  justify-content:center;
+  align-items:flex-start;
+  min-height:100vh;
+  padding:50px 0;
+  overflow-x:hidden;
+}
+
+/* ==== Fundo animado ==== */
+.container {
+  position:fixed; inset:0; z-index:0;
+  background:radial-gradient(circle at 20% 30%, #1a1a1a, #0f0f0f 80%);
+}
+.container::after {
+  content:""; position:absolute; inset:0;
+  background:linear-gradient(45deg,rgba(255,255,255,0.04) 25%,transparent 25%,transparent 50%,rgba(255,255,255,0.04) 50%,rgba(255,255,255,0.04) 75%,transparent 75%,transparent);
+  background-size:80px 80px;
+  animation:bgMove 10s linear infinite alternate;
+}
+@keyframes bgMove {0%{background-position:0 0;}100%{background-position:60px 60px;}}
+
+/* ==== Painel ==== */
+.painel {
+  position:relative; z-index:2;
+  width:90%; max-width:900px;
+  background:var(--panel);
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  padding:40px 35px;
+  box-shadow:0 0 30px rgba(255,255,255,0.05);
+  backdrop-filter:blur(12px);
+  animation:fadeIn 0.8s ease;
+}
+@keyframes fadeIn {from{opacity:0;transform:translateY(15px);}to{opacity:1;transform:translateY(0);}}
+
+/* ==== Título ==== */
+h2 {
+  font-size:1.9rem;
+  margin-bottom:25px;
+  border-left:4px solid var(--accent);
+  padding-left:10px;
+}
+
+/* ==== Tabela ==== */
+.table {
+  width:100%;
+  border-collapse:collapse;
+  background:rgba(25,25,25,0.85);
+  border-radius:12px;
+  overflow:hidden;
+}
+.table th, .table td {
+  padding:12px 15px;
+  border-bottom:1px solid #2a2a2a;
+  text-align:left;
+}
+.table th {
+  background:#111;
+  font-weight:600;
+}
+.table tr:hover {
+  background:#1a1a1a;
+  transition:var(--transition);
+}
+
+/* ==== Status / Cores ==== */
+.presenca-ok {color:#8aff8a; font-weight:600;}
+.presenca-low {color:#ff7b7b; font-weight:600;}
+.nota-ok {color:#9fcfff; font-weight:600;}
+.nota-low {color:#ff9d57; font-weight:600;}
+
+/* ==== Voltar ==== */
+.btn-voltar {
+  display:inline-block;
+  margin-top:25px;
+  color:#ccc;
+  text-decoration:underline;
+  cursor:pointer;
+  font-size:15px;
+}
+.btn-voltar:hover {color:#fff;}
+
+/* ==== Animação de carregamento ==== */
+.loading {
+  text-align:center;
+  padding:20px;
+  font-size:16px;
+  color:#bbb;
+  animation:pulse 1.2s infinite alternate;
+}
+@keyframes pulse {from{opacity:0.5;}to{opacity:1;}}
+</style>
+</head>
+
+<body>
+<div class="container"></div>
+
+<div class="painel">
+  <h2 id="tituloTurma">Alunos da Turma</h2>
+
+  <table class="table">
+    <thead>
+      <tr><th>Aluno</th><th>Nota</th><th>Presença</th></tr>
+    </thead>
+    <tbody id="listaAlunos">
+      <tr><td colspan="3" class="loading">Carregando alunos...</td></tr>
+    </tbody>
+  </table>
+
+  <a href="turmas.html" class="btn-voltar">← Voltar</a>
+</div>
+
+<script>
+// Pega dados da URL
+const params = new URLSearchParams(window.location.search);
+const turmaId = params.get("turma_id");
+const turmaNome = decodeURIComponent(params.get("turma_nome") || "Turma");
+
+// Define título
+document.getElementById("tituloTurma").textContent = `Alunos - ${turmaNome}`;
+
+// Função pra carregar alunos do backend
+async function carregarAlunos() {
+  const tbody = document.getElementById("listaAlunos");
+  tbody.innerHTML = `<tr><td colspan="3" class="loading">Carregando alunos...</td></tr>`;
+
+  try {
+    const res = await fetch(`http://127.0.0.1:8000/api/alunos?turma_id=${turmaId}`);
+    const alunos = await res.json();
+
+    if (!alunos.length) {
+      tbody.innerHTML = `<tr><td colspan="3" style="text-align:center;color:#aaa;">Nenhum aluno encontrado.</td></tr>`;
+      return;
+    }
+
+    tbody.innerHTML = "";
+    alunos.forEach(a => {
+      const linha = document.createElement("tr");
+      const corNota = a.nota >= 7 ? "nota-ok" : "nota-low";
+      const corPres = a.presenca >= 75 ? "presenca-ok" : "presenca-low";
+      linha.innerHTML = `
+        <td>${a.nome}</td>
+        <td class="${corNota}">${a.nota.toFixed(1)}</td>
+        <td class="${corPres}">${a.presenca}%</td>
+      `;
+      tbody.appendChild(linha);
+    });
+  } catch (err) {
+    console.error("Erro ao carregar alunos:", err);
+    tbody.innerHTML = `<tr><td colspan="3" style="text-align:center;color:#f66;">Erro ao carregar dados.</td></tr>`;
+  }
+}
+
+// Chama ao iniciar
+carregarAlunos();
+</script>
+</body>
+</html>

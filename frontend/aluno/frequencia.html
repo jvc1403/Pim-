@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Consultar Frequência</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Poppins:wght@600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+:root {
+  --text: #fff;
+  --border: #2b2b2b;
+  --bg-dark: #000;
+  --radius: 14px;
+}
+
+/* === BASE === */
+body {
+  margin: 0;
+  font-family: "Inter", sans-serif;
+  color: var(--text);
+  display: flex;
+  min-height: 100vh;
+  background-color: var(--bg-dark);
+  background-image:
+    linear-gradient(30deg, #111 12%, transparent 12.5%, transparent 87%, #111 87.5%, #111),
+    linear-gradient(150deg, #111 12%, transparent 12.5%, transparent 87%, #111 87.5%, #111),
+    linear-gradient(60deg, #55555533 25%, transparent 25.5%, transparent 75%, #55555533 75%, #55555533);
+  background-size: 80px 140px;
+}
+
+/* === SIDEBAR === */
+.sidebar {
+  width: 260px;
+  height: 100vh;
+  background: linear-gradient(180deg, #0a0a0a 0%, #111 100%);
+  border-right: 1px solid rgba(255,255,255,0.05);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding-top: 35px;
+  transition: all 0.4s ease-in-out;
+  position: fixed;
+  z-index: 10;
+  backdrop-filter: blur(10px);
+  box-shadow: inset -1px 0 10px rgba(255,255,255,0.05);
+}
+
+.sidebar.collapsed {
+  width: 85px;
+  padding-top: 25px;
+}
+
+/* === LOGO === */
+.logo {
+  width: 125px; /* aumentada */
+  height: auto;
+  margin-bottom: 18px;
+  transition: all 0.4s ease;
+  animation: pulseGlow 3s ease-in-out infinite;
+  opacity: 1;
+}
+
+.sidebar.collapsed .logo {
+  width: 55px; /* proporcional ao novo tamanho */
+  margin-bottom: 10px;
+}
+
+@keyframes pulseGlow {
+  0%, 100% {
+    filter: drop-shadow(0 0 8px rgba(255,255,255,0.25));
+    transform: scale(1);
+  }
+  50% {
+    filter: drop-shadow(0 0 18px rgba(255,255,255,0.5));
+    transform: scale(1.06);
+  }
+}
+
+/* === TÍTULO === */
+.sidebar h1 {
+  font-family: 'Poppins', sans-serif;
+  font-weight: 600;
+  color: #fff;
+  font-size: 16px;
+  margin-bottom: 25px;
+  letter-spacing: 0.4px;
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+.sidebar.collapsed h1 {
+  opacity: 0;
+  transform: translateY(-10px);
+  pointer-events: none;
+}
+
+/* === TOGGLE BUTTON === */
+.toggle-btn {
+  position: absolute;
+  top: 20px;
+  right: -18px;
+  background: #0f0f0f;
+  border: 1px solid #444;
+  color: #fff;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: 0.3s;
+}
+.toggle-btn:hover {
+  background: #fff;
+  color: #000;
+  transform: scale(1.1);
+}
+
+/* === NAV LINKS === */
+nav {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  align-items: center;
+  gap: 5px;
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+.sidebar.collapsed nav {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.nav-link {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 14px;
+  padding: 12px 20px;
+  color: #cfcfcf;
+  text-decoration: none;
+  border-radius: 10px;
+  width: 85%;
+  transition: all 0.3s ease;
+  font-weight: 500;
+}
+
+.nav-link:hover {
+  background: rgba(255,255,255,0.08);
+  color: #fff;
+  transform: translateX(2px);
+}
+
+.nav-link.active {
+  background: rgba(255,255,255,0.15);
+  box-shadow: inset 2px 0 0 #fff;
+  color: #fff;
+}
+
+.sidebar.collapsed .nav-link {
+  justify-content: center;
+  padding: 10px 0;
+  width: 100%;
+}
+
+.sidebar.collapsed .nav-text {
+  display: none;
+}
+
+/* === ÍCONES === */
+.nav-icon {
+  width: 22px;
+  text-align: center;
+  font-size: 18px;
+  color: #fff;
+}
+
+/* === CONTEÚDO PRINCIPAL === */
+.main {
+  flex: 1;
+  padding: 60px;
+  margin-left: 260px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition: margin-left 0.4s ease-in-out;
+}
+.sidebar.collapsed ~ .main { margin-left: 85px; }
+
+h2 {
+  font-family: 'Poppins', sans-serif;
+  font-size: 28px;
+  text-align: center;
+  border-bottom: 2px solid #fff;
+  padding-bottom: 10px;
+  width: fit-content;
+  margin-bottom: 40px;
+}
+
+/* === TABELA === */
+.table-container {
+  width: 100%;
+  max-width: 850px;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 25px;
+  box-shadow: 0 0 25px rgba(255,255,255,0.05);
+  backdrop-filter: blur(8px);
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: center;
+  font-size: 15px;
+}
+th {
+  text-transform: uppercase;
+  font-weight: 600;
+  letter-spacing: 1px;
+  color: #ddd;
+  border-bottom: 2px solid rgba(255,255,255,0.2);
+  padding: 14px;
+}
+td {
+  padding: 14px;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+  color: #eee;
+}
+
+tr:hover td {
+  background: rgba(255,255,255,0.05);
+}
+
+.status {
+  font-weight: 600;
+  padding: 6px 12px;
+  border-radius: 8px;
+}
+.status.verde { background: #00d66c; color: #000; }
+.status.amarelo { background: #ffcc33; color: #000; }
+.status.vermelho { background: #ff3b3b; color: #fff; }
+
+/* === GRÁFICO === */
+.grafico-container {
+  margin-top: 40px;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  width: 100%;
+  max-width: 750px;
+  padding: 20px;
+  box-shadow: 0 0 25px rgba(255,255,255,0.05);
+}
+canvas {
+  width: 100%;
+  height: 260px;
+}
+</style>
+</head>
+
+<body>
+  <!-- SIDEBAR -->
+  <div class="sidebar" id="sidebar">
+    <img src="../assets/images/logo_icon.png" alt="Logo do Sistema" class="logo" id="logoSistema">
+    <h1>Painel do Aluno</h1>
+
+    <button class="toggle-btn" id="toggleBtn"><i class="fas fa-angle-left"></i></button>
+
+    <nav>
+      <a href="cards.html" class="nav-link"><i class="fas fa-home nav-icon"></i><span class="nav-text">Início</span></a>
+      <a href="atividades.html" class="nav-link"><i class="fas fa-file-alt nav-icon"></i><span class="nav-text">Atividades</span></a>
+      <a href="frequencia.html" class="nav-link active"><i class="fas fa-user-check nav-icon"></i><span class="nav-text">Frequência</span></a>
+      <a href="notas.html" class="nav-link"><i class="fas fa-graduation-cap nav-icon"></i><span class="nav-text">Notas</span></a>
+      <a href="perfil.html" class="nav-link"><i class="fas fa-user nav-icon"></i><span class="nav-text">Perfil</span></a>
+      <a href="suporte.html" class="nav-link"><i class="fas fa-headset nav-icon"></i><span class="nav-text">Suporte</span></a>
+    </nav>
+  </div>
+
+  <!-- CONTEÚDO -->
+  <div class="main">
+    <h2>Consultar Frequência</h2>
+
+    <div class="table-container">
+      <table id="tabela-frequencia">
+        <thead>
+          <tr>
+            <th>Matéria</th>
+            <th>Frequência</th>
+            <th>Faltas</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>Matemática</td><td>95%</td><td>1</td><td><span class="status verde">Boa</span></td></tr>
+          <tr><td>Português</td><td>82%</td><td>3</td><td><span class="status verde">Boa</span></td></tr>
+          <tr><td>História</td><td>70%</td><td>6</td><td><span class="status amarelo">Média</span></td></tr>
+          <tr><td>Geografia</td><td>55%</td><td>10</td><td><span class="status vermelho">Baixa</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="grafico-container">
+      <canvas id="graficoFrequencia"></canvas>
+    </div>
+  </div>
+
+  <script>
+    const API_URL = "http://127.0.0.1:8000/api/frequencias";
+    const tabela = document.querySelector("#tabela-frequencia tbody");
+    const sidebar = document.getElementById('sidebar');
+    const toggleBtn = document.getElementById('toggleBtn');
+
+    toggleBtn.onclick = () => {
+      sidebar.classList.toggle('collapsed');
+      const icon = toggleBtn.querySelector('i');
+      icon.classList.toggle('fa-angle-left');
+      icon.classList.toggle('fa-angle-right');
+    };
+
+    async function carregarFrequencias() {
+      let materias = ["Matemática", "Português", "História", "Geografia"];
+      let frequencias = [95, 82, 70, 55];
+      let faltas = [1, 3, 6, 10];
+
+      try {
+        const res = await fetch(API_URL);
+        if (res.ok) {
+          const data = await res.json();
+          materias = data.map(d => d.materia);
+          frequencias = data.map(d => d.frequencia);
+          faltas = data.map(d => d.faltas);
+        }
+      } catch {
+        console.warn("Sem resposta do backend, usando dados locais.");
+      }
+
+      tabela.innerHTML = "";
+      materias.forEach((m, i) => {
+        const f = frequencias[i];
+        const falt = faltas[i];
+        const statusClass = f >= 75 ? "verde" : f >= 65 ? "amarelo" : "vermelho";
+        const statusText = f >= 75 ? "Boa" : f >= 65 ? "Média" : "Baixa";
+        tabela.innerHTML += `
+          <tr>
+            <td>${m}</td><td>${f}%</td><td>${falt}</td>
+            <td><span class="status ${statusClass}">${statusText}</span></td>
+          </tr>`;
+      });
+
+      renderGrafico(materias, frequencias);
+    }
+
+    function renderGrafico(materias, frequencias) {
+      const ctx = document.getElementById("graficoFrequencia").getContext("2d");
+      new Chart(ctx, {
+        type: "bar",
+        data: {
+          labels: materias,
+          datasets: [{
+            label: "Frequência (%)",
+            data: frequencias,
+            backgroundColor: frequencias.map(f =>
+              f >= 75 ? "#00d66c" : f >= 65 ? "#ffcc33" : "#ff3b3b"
+            ),
+            borderRadius: 6,
+            barThickness: 40
+          }]
+        },
+        options: {
+          indexAxis: 'y',
+          scales: {
+            x: { beginAtZero: true, ticks: { color: "#fff" }, grid: { color: "#222" }},
+            y: { ticks: { color: "#fff" }, grid: { color: "#222" }}
+          },
+          plugins: { legend: { display: false } }
+        }
+      });
+    }
+
+    carregarFrequencias();
+  </script>
+</body>
+</html>

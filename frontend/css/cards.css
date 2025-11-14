@@ -1,0 +1,43 @@
+/* CSS para os cards */
+
+/* Painel que organiza os cards */
+.painel-cards {
+  display: flex;
+  flex-wrap: wrap;         /* permite quebrar linha se necessário */
+  justify-content: center; /* centraliza horizontalmente */
+  gap: 20px;               /* espaço entre os cards */
+  margin-top: 20px;
+}
+
+/* Estilo dos cards individuais */
+.card-mini {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 160px;
+  height: 100px;
+  background-color: #4a90e2; /* azul bonito */
+  color: #fff;
+  text-decoration: none;     /* remove sublinhado */
+  border-radius: 12px;       /* cantos arredondados */
+  font-family: Arial, sans-serif;
+  font-weight: bold;
+  font-size: 16px;
+  transition: transform 0.3s ease, background-color 0.3s ease;
+}
+
+/* Efeito ao passar o mouse */
+.card-mini:hover {
+  background-color: #357ABD; /* tom mais escuro */
+  transform: translateY(-5px); /* leve elevação */
+  cursor: pointer;
+}
+
+/* Responsividade: cards menores em telas pequenas */
+@media (max-width: 500px) {
+  .card-mini {
+    width: 120px;
+    height: 80px;
+    font-size: 14px;
+  }
+}

@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Realizar Atividade</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<style>
+:root {
+  --text: #ffffff;
+  --bg: #1a1a1a;
+  --panel: #2a2a2a;
+  --border: #333;
+  --radius: 16px;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Inter', sans-serif;
+  display: flex;
+  min-height: 100vh;
+}
+
+/* SIDEBAR */
+.sidebar {
+  width: 260px;
+  height: 100vh;
+  background: #0d0d0d;
+  border-right: 1px solid rgba(255,255,255,0.05);
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  padding-top:30px;
+  position:fixed;
+  transition:.3s;
+}
+
+.sidebar.collapsed { width:85px; }
+
+.logo {
+  width:110px;
+  transition:.3s;
+}
+.sidebar.collapsed .logo { width:55px; }
+
+.sidebar h1 {
+  margin:15px 0 25px;
+  font-size:16px;
+  transition:.3s;
+}
+.sidebar.collapsed h1 { opacity:0; pointer-events:none; }
+
+.toggle-btn {
+  position:absolute; top:15px; right:-18px;
+  width:38px; height:38px;
+  border-radius:50%;
+  background:#111;
+  border:1px solid #444;
+  color:#fff;
+  display:flex; align-items:center; justify-content:center;
+  cursor:pointer;
+  transition:.3s;
+}
+.toggle-btn:hover { background:#fff; color:#000; transform:scale(1.1); }
+
+/* NAV */
+nav { width:100%; display:flex; flex-direction:column; align-items:center; }
+
+.nav-link {
+  width:85%;
+  padding:12px;
+  display:flex; gap:12px;
+  color:#ccc;
+  text-decoration:none;
+  border-radius:12px;
+  margin:5px 0;
+  transition:.3s;
+}
+.nav-link:hover { background:rgba(255,255,255,0.1); color:#fff; }
+.nav-link.active { background:rgba(255,255,255,0.2); box-shadow:inset 3px 0 #fff; }
+
+.sidebar.collapsed .nav-link { justify-content:center; width:100%; }
+.sidebar.collapsed .nav-text { display:none; }
+
+/* MAIN */
+.main {
+  flex:1;
+  padding:50px;
+  margin-left:260px;
+  transition:.3s;
+}
+.sidebar.collapsed ~ .main { margin-left:85px; }
+
+h1 {
+  font-size:26px;
+  font-family:'Poppins';
+  display:flex; gap:10px;
+  margin-bottom:25px;
+}
+
+/* CARD ATIVIDADE */
+.atividade-card {
+  background:var(--panel);
+  padding:30px;
+  border-radius:var(--radius);
+  border:1px solid var(--border);
+  width:100%;
+  max-width:900px;
+  margin:auto;
+}
+
+.info {
+  margin-bottom:20px;
+  font-size:15px;
+  color:#ddd;
+}
+
+textarea {
+  width:100%;
+  height:140px;
+  padding:12px;
+  background:#1d1d1d;
+  border:1px solid #444;
+  border-radius:8px;
+  color:#fff;
+  resize:none;
+  margin-top:10px;
+}
+
+.upload-area {
+  margin:20px 0;
+  padding:14px;
+  border:2px dashed #666;
+  border-radius:12px;
+  text-align:center;
+  background:rgba(255,255,255,0.04);
+}
+
+.btn-enviar {
+  width:100%;
+  padding:12px;
+  font-size:15px;
+  font-weight:600;
+  border-radius:10px;
+  border:1px solid #fff;
+  background:transparent;
+  color:#fff;
+  cursor:pointer;
+  transition:.3s;
+}
+.btn-enviar:hover { background:#fff; color:#000; transform:scale(1.03); }
+
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<div class="sidebar" id="sidebar">
+  <img src="../assets/images/logo_icon.png" class="logo">
+
+  <h1>Painel do Aluno</h1>
+
+  <button class="toggle-btn" id="toggleBtn">
+    <i class="fas fa-angle-left"></i>
+  </button>
+
+  <nav>
+    <a href="cards.html" class="nav-link">
+      <i class="fas fa-home nav-icon"></i><span class="nav-text">Início</span>
+    </a>
+
+    <a href="atividades.html" class="nav-link active">
+      <i class="fas fa-file-alt nav-icon"></i><span class="nav-text">Atividades</span>
+    </a>
+
+    <a href="frequencia.html" class="nav-link">
+      <i class="fas fa-user-check nav-icon"></i><span class="nav-text">Frequência</span>
+    </a>
+
+    <a href="notas.html" class="nav-link">
+      <i class="fas fa-graduation-cap nav-icon"></i><span class="nav-text">Notas</span>
+    </a>
+
+    <a href="perfil.html" class="nav-link">
+      <i class="fas fa-user nav-icon"></i><span class="nav-text">Perfil</span>
+    </a>
+
+    <a href="suporte.html" class="nav-link">
+      <i class="fas fa-headset nav-icon"></i><span class="nav-text">Suporte</span>
+    </a>
+  </nav>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+  <h1><i class="fas fa-file-alt"></i> Realizar Atividade</h1>
+
+  <div class="atividade-card">
+    <h2 id="tituloAtv">Carregando...</h2>
+
+    <p class="info" id="materiaAtv"></p>
+    <p class="info" id="dataAtv"></p>
+    <p class="info" id="descricaoAtv"></p>
+
+    <h3>Resposta do Aluno</h3>
+    <textarea id="respostaTexto" placeholder="Digite sua resposta aqui..."></textarea>
+
+    <div class="upload-area">
+      <input type="file" id="arquivo" style="display:none;">
+      <button class="btn-enviar" style="width:auto" onclick="document.getElementById('arquivo').click()">📎 Anexar Arquivo</button>
+    </div>
+
+    <button class="btn-enviar" onclick="enviarResposta()">Enviar Atividade</button>
+  </div>
+</div>
+
+<script>
+// SIDEBAR
+const sidebar=document.getElementById("sidebar");
+document.getElementById("toggleBtn").onclick=()=>{
+  sidebar.classList.toggle("collapsed");
+  document.querySelector("#toggleBtn i").classList.toggle("fa-angle-right");
+};
+
+// BACKEND
+const API_URL = "http://127.0.0.1:8000/api/atividades";
+const params = new URLSearchParams(window.location.search);
+const atividadeId = params.get("id");
+
+async function carregarAtividade() {
+  try {
+    const res = await fetch(`${API_URL}/${atividadeId}`);
+    if (!res.ok) throw new Error("Erro ao carregar");
+
+    const a = await res.json();
+
+    document.getElementById("tituloAtv").innerText = a.titulo;
+    document.getElementById("materiaAtv").innerText = "Matéria: " + a.materia;
+    document.getElementById("dataAtv").innerText = "Data: " + a.data;
+    document.getElementById("descricaoAtv").innerText = a.descricao;
+
+  } catch {
+    document.getElementById("tituloAtv").innerText = "Atividade de Exemplo";
+    document.getElementById("materiaAtv").innerText = "Matéria: Matemática";
+    document.getElementById("dataAtv").innerText = "Data: 12/11/2025";
+    document.getElementById("descricaoAtv").innerText = "Resolva as questões do PDF enviado.";
+  }
+}
+
+function enviarResposta() {
+  alert("Atividade enviada com sucesso!");
+}
+
+carregarAtividade();
+</script>
+
+</body>
+</html>

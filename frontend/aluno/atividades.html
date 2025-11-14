@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Atividades</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<style>
+:root {
+  --text: #ffffff;
+  --bg: #1a1a1a;
+  --panel: #2a2a2a;
+  --border: #333;
+  --radius: 16px;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Inter', sans-serif;
+  display: flex;
+  min-height: 100vh;
+}
+
+/* SIDEBAR */
+.sidebar {
+  width: 260px;
+  height: 100vh;
+  background: linear-gradient(180deg, #0a0a0a 0%, #111 100%);
+  border-right: 1px solid rgba(255,255,255,0.05);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 30px;
+  transition: all 0.4s ease;
+  position: fixed;
+  z-index: 10;
+  box-shadow: inset -1px 0 10px rgba(255,255,255,0.05);
+}
+
+.sidebar.collapsed {
+  width: 85px;
+}
+
+/* LOGO */
+.logo {
+  width: 110px;
+  height: auto;
+  margin-bottom: 15px;
+  transition: 0.4s ease;
+}
+
+.sidebar.collapsed .logo {
+  width: 55px;
+}
+
+/* TÍTULO */
+.sidebar h1 {
+  font-family: 'Poppins';
+  font-size: 16px;
+  margin-bottom: 25px;
+  transition: 0.3s;
+}
+
+.sidebar.collapsed h1 {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* BOTÃO TOGGLE */
+.toggle-btn {
+  position: absolute;
+  top: 15px;
+  right: -18px;
+  background: #0f0f0f;
+  border: 1px solid #444;
+  color: #fff;
+  width: 38px; height: 38px;
+  border-radius: 50%;
+  cursor: pointer;
+  display:flex; align-items:center; justify-content:center;
+  transition: 0.3s;
+}
+.toggle-btn:hover { background:#fff; color:#000; transform:scale(1.1); }
+
+/* NAV */
+nav {
+  width: 100%;
+  margin-top: 10px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+}
+
+.nav-link {
+  width: 85%;
+  padding: 12px;
+  margin: 5px 0;
+  display:flex;
+  align-items:center;
+  gap:12px;
+  color:#ccc;
+  text-decoration:none;
+  border-radius:12px;
+  transition:0.3s;
+}
+
+.nav-link:hover {
+  background:rgba(255,255,255,0.1);
+  color:#fff;
+}
+
+.nav-link.active {
+  background:rgba(255,255,255,0.15);
+  box-shadow: inset 3px 0 0 #fff;
+}
+
+.sidebar.collapsed .nav-link {
+  width: 100%;
+  justify-content:center;
+}
+
+.sidebar.collapsed .nav-text {
+  display:none;
+}
+
+.nav-icon {
+  width: 20px;
+  font-size: 18px;
+}
+
+/* MAIN */
+.main {
+  flex:1;
+  padding:40px;
+  margin-left:260px;
+  transition:0.3s;
+}
+.sidebar.collapsed ~ .main { margin-left:85px; }
+
+h1 {
+  font-size: 28px;
+  margin-bottom: 25px;
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+
+/* CARD */
+.container-card {
+  width:100%;
+  background:var(--panel);
+  padding:25px;
+  border-radius:var(--radius);
+  border:1px solid var(--border);
+}
+
+/* TABLE */
+table {
+  width:100%;
+  border-collapse:collapse;
+  margin-top:15px;
+}
+
+th {
+  background:#3a3a3a;
+  padding:12px;
+  text-transform:uppercase;
+  font-size:12px;
+}
+
+td {
+  padding:12px;
+  background:rgba(255,255,255,0.05);
+  border-bottom:1px solid #444;
+}
+
+tr:hover td {
+  background:rgba(255,255,255,0.1);
+}
+
+/* STATUS */
+.status {
+  padding:6px 10px;
+  border-radius:8px;
+  font-weight:600;
+  font-size:12px;
+}
+.status.entregue { background:#00d66c; color:#000; }
+.status.pendente { background:#ffcc33; color:#000; }
+.status.atrasada { background:#ff3b3b; color:#fff; }
+
+/* BOTÃO VER */
+.btn-view {
+  padding:6px 12px;
+  background:transparent;
+  border-radius:8px;
+  border:1px solid #fff;
+  color:#fff;
+  cursor:pointer;
+}
+.btn-view:hover { background:#fff; color:#000; }
+
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<div class="sidebar" id="sidebar">
+
+  <img src="../assets/images/logo_icon.png" class="logo">
+
+  <h1>Painel do Aluno</h1>
+
+  <button class="toggle-btn" id="toggleBtn">
+    <i class="fas fa-angle-left"></i>
+  </button>
+
+  <nav>
+    <a href="cards.html" class="nav-link">
+      <i class="fas fa-home nav-icon"></i>
+      <span class="nav-text">Início</span>
+    </a>
+
+    <a href="atividades.html" class="nav-link active">
+      <i class="fas fa-file-alt nav-icon"></i>
+      <span class="nav-text">Atividades</span>
+    </a>
+
+    <a href="frequencia.html" class="nav-link">
+      <i class="fas fa-user-check nav-icon"></i>
+      <span class="nav-text">Frequência</span>
+    </a>
+
+    <a href="notas.html" class="nav-link">
+      <i class="fas fa-graduation-cap nav-icon"></i>
+      <span class="nav-text">Notas</span>
+    </a>
+
+    <a href="perfil.html" class="nav-link">
+      <i class="fas fa-user nav-icon"></i>
+      <span class="nav-text">Perfil</span>
+    </a>
+
+    <a href="suporte.html" class="nav-link">
+      <i class="fas fa-headset nav-icon"></i>
+      <span class="nav-text">Suporte</span>
+    </a>
+  </nav>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+  <h1><i class="fas fa-file-alt"></i> Atividades</h1>
+
+  <div class="container-card">
+    <table id="ativTable">
+      <thead>
+        <tr>
+          <th>Título</th>
+          <th>Matéria</th>
+          <th>Data</th>
+          <th>Status</th>
+          <th>Ação</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
+</div>
+
+<script>
+// SIDEBAR
+const sidebar = document.getElementById("sidebar");
+document.getElementById("toggleBtn").onclick = () => {
+  sidebar.classList.toggle("collapsed");
+  const icon = document.querySelector("#toggleBtn i");
+  icon.classList.toggle("fa-angle-left");
+  icon.classList.toggle("fa-angle-right");
+};
+
+// BACKEND
+const API_URL = "http://127.0.0.1:8000/api/atividades";
+const tbody = document.querySelector("#ativTable tbody");
+
+function linha(a) {
+  return `
+    <tr>
+      <td>${a.titulo}</td>
+      <td>${a.materia}</td>
+      <td>${a.data}</td>
+      <td><span class="status ${a.statusClass}">${a.status}</span></td>
+      <td><button class="btn-view" onclick="abrir(${a.id})">Ver</button></td>
+    </tr>
+  `;
+}
+
+function abrir(id) {
+  window.location.href = "realizar_atividade.html?id=" + id;
+}
+
+async function carregarAtividades() {
+  let lista = [
+    {id:1, titulo:"Trabalho de História", materia:"História", data:"10/11/2025", status:"Entregue", statusClass:"entregue"},
+    {id:2, titulo:"Redação ENEM", materia:"Português", data:"15/11/2025", status:"Pendente", statusClass:"pendente"},
+    {id:3, titulo:"Lista de Matemática", materia:"Matemática", data:"20/10/2025", status:"Atrasada", statusClass:"atrasada"},
+  ];
+
+  try {
+    const res = await fetch(API_URL);
+    if (res.ok) lista = await res.json();
+  } catch {}
+
+  tbody.innerHTML = "";
+  lista.forEach(a => tbody.innerHTML += linha(a));
+}
+
+carregarAtividades();
+</script>
+
+</body>
+</html>
+

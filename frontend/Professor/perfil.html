@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Perfil do Professor</title>
+
+<!-- FONTES -->
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --text: #ffffff;
+  --subtext: #bfbfbf;
+  --accent: #ffffff;
+  --border: #2a2a2a;
+  --panel: rgba(20,20,20,0.85);
+  --shadow: rgba(255,255,255,0.05);
+  --transition: all 0.3s ease;
+  --radius: 16px;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'Poppins', sans-serif;
+  color: var(--text);
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #000;
+  overflow: hidden;
+}
+
+/* FUNDO */
+.container {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  background: linear-gradient(30deg,#111 12%,transparent 12.5%,transparent 87%,#111 87.5%,#111),
+              linear-gradient(150deg,#111 12%,transparent 12.5%,transparent 87%,#111 87.5%,#111),
+              linear-gradient(60deg,#55555533 25%,transparent 25.5%,transparent 75%,#55555533 75%,#55555533);
+  background-size: 80px 140px;
+  animation: moveBg 18s linear infinite alternate;
+}
+@keyframes moveBg {0%{background-position:0 0,40px 70px,0 0;}100%{background-position:60px 60px,80px 110px,40px 40px;}}
+
+/* PAINEL */
+.painel {
+  position: relative;
+  z-index: 2;
+  width: 90%;
+  max-width: 600px;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 50px 40px;
+  box-shadow: 0 0 40px var(--shadow);
+  backdrop-filter: blur(15px);
+  animation: fadeIn 1s ease;
+  text-align: center;
+}
+@keyframes fadeIn {from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);}}
+
+/* TÍTULO */
+h2 {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 1.9rem;
+  text-transform: uppercase;
+  margin-bottom: 35px;
+  letter-spacing: 1.5px;
+  border-bottom: 2px solid var(--accent);
+  display: inline-block;
+  padding-bottom: 5px;
+}
+
+/* FOTO */
+.foto-perfil {
+  width: 130px;
+  height: 130px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 30% 30%, #1a1a1a, #0d0d0d);
+  border: 2px solid #555;
+  margin: 0 auto 25px auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: var(--text);
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 0 25px rgba(255,255,255,0.1);
+  transition: var(--transition);
+}
+.foto-perfil img {width:100%;height:100%;border-radius:50%;object-fit:cover;}
+.foto-upload {position:absolute;bottom:0;left:0;width:100%;height:40px;background:rgba(0,0,0,0.7);color:var(--text);font-size:13px;display:none;justify-content:center;align-items:center;cursor:pointer;border-bottom-left-radius:50%;border-bottom-right-radius:50%;}
+.foto-perfil:hover .foto-upload {display:flex;}
+.foto-perfil:hover {transform:scale(1.05);box-shadow:0 0 35px rgba(255,255,255,0.2);}
+
+/* INFO */
+.info-box {
+  background: rgba(25,25,25,0.8);
+  border: 1px solid #2a2a2a;
+  border-radius: 10px;
+  padding: 14px 18px;
+  margin: 10px 0;
+  text-align: left;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: var(--transition);
+}
+.info-box:hover {background:rgba(255,255,255,0.05);transform:scale(1.01);}
+.info-label {color:var(--subtext);font-size:14px;font-weight:500;}
+.info-value {color:var(--text);font-weight:600;font-size:15px;}
+input.editavel {
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid #666;
+  color: var(--text);
+  font-size: 15px;
+  padding: 4px;
+  width: 70%;
+  text-align: right;
+  display: none;
+}
+input.editavel:focus {border-color:var(--accent);outline:none;}
+
+/* BOTÕES */
+.botoes {margin-top:35px;display:flex;justify-content:center;gap:15px;}
+.btn {padding:12px 28px;border:1px solid #333;border-radius:8px;background:#141414;color:#fff;font-weight:500;cursor:pointer;transition:var(--transition);}
+.btn:hover {background:#fff;color:#000;box-shadow:0 0 15px rgba(255,255,255,0.3);}
+.btn.editar {background:#fff;color:#000;border-color:#fff;}
+.btn.editar:hover {background:#ccc;}
+.botoes-edicao {display:none;gap:15px;justify-content:center;margin-top:25px;}
+</style>
+</head>
+
+<body>
+<div class="container"></div>
+<div class="painel">
+  <h2>Perfil do Professor</h2>
+
+  <div class="foto-perfil" id="fotoPerfil">
+    <img id="fotoPreview" src="" alt="Foto do perfil" style="display:none;">
+    <div class="foto-upload" id="uploadLabel">Alterar foto</div>
+    <input type="file" id="inputFoto" accept="image/*" style="display:none;">
+    <span id="iconePerfil">👨‍🏫</span>
+  </div>
+
+  <div class="info-box"><span class="info-label">Nome:</span><span class="info-value" id="nomeValor">—</span><input type="text" id="inputNome" class="editavel"></div>
+  <div class="info-box"><span class="info-label">E-mail:</span><span class="info-value" id="emailValor">—</span><input type="text" id="inputEmail" class="editavel"></div>
+  <div class="info-box"><span class="info-label">Telefone:</span><span class="info-value" id="telefoneValor">—</span><input type="text" id="inputTelefone" class="editavel"></div>
+  <div class="info-box"><span class="info-label">Disciplina:</span><span class="info-value" id="disciplinaValor">—</span></div>
+
+  <div class="botoes">
+    <a href="cards.html" class="btn">← Voltar</a>
+    <button class="btn editar" id="editarBtn">Editar Perfil</button>
+  </div>
+  <div class="botoes-edicao" id="botoesEdicao">
+    <button class="btn" id="cancelarBtn">Cancelar</button>
+    <button class="btn editar" id="salvarBtn">Salvar</button>
+  </div>
+</div>
+
+<script>
+const API = "http://127.0.0.1:8000/api/usuario";
+const editarBtn = document.getElementById("editarBtn");
+const botoesEdicao = document.getElementById("botoesEdicao");
+const campos = [
+  {valor:'nomeValor', input:'inputNome'},
+  {valor:'emailValor', input:'inputEmail'},
+  {valor:'telefoneValor', input:'inputTelefone'}
+];
+const uploadLabel = document.getElementById("uploadLabel");
+const inputFoto = document.getElementById("inputFoto");
+const fotoPreview = document.getElementById("fotoPreview");
+const iconePerfil = document.getElementById("iconePerfil");
+const cancelarBtn = document.getElementById("cancelarBtn");
+const salvarBtn = document.getElementById("salvarBtn");
+
+/* === CARREGAR PERFIL === */
+async function carregarPerfil() {
+  try {
+    const res = await fetch(`${API}/me`, {
+      headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` }
+    });
+    const data = await res.json();
+    document.getElementById("nomeValor").textContent = data.nome;
+    document.getElementById("emailValor").textContent = data.email;
+    document.getElementById("telefoneValor").textContent = data.telefone || "—";
+    document.getElementById("disciplinaValor").textContent = data.disciplina || "—";
+    if (data.foto) {
+      fotoPreview.src = `data:image/jpeg;base64,${data.foto}`;
+      fotoPreview.style.display = "block";
+      iconePerfil.style.display = "none";
+    }
+  } catch (e) { console.error("Erro ao carregar perfil:", e); }
+}
+carregarPerfil();
+
+/* === EDIÇÃO === */
+editarBtn.addEventListener("click", () => {
+  editarBtn.style.display="none";
+  botoesEdicao.style.display="flex";
+  campos.forEach(c => {
+    document.getElementById(c.valor).style.display="none";
+    document.getElementById(c.input).style.display="block";
+    document.getElementById(c.input).value = document.getElementById(c.valor).textContent;
+  });
+  uploadLabel.style.display="flex";
+});
+
+cancelarBtn.addEventListener("click", () => {
+  editarBtn.style.display="inline-block";
+  botoesEdicao.style.display="none";
+  campos.forEach(c => {
+    document.getElementById(c.valor).style.display="inline";
+    document.getElementById(c.input).style.display="none";
+  });
+  uploadLabel.style.display="none";
+});
+
+/* === SALVAR ALTERAÇÕES === */
+salvarBtn.addEventListener("click", async () => {
+  const formData = new FormData();
+  formData.append("nome", document.getElementById("inputNome").value);
+  formData.append("email", document.getElementById("inputEmail").value);
+  formData.append("telefone", document.getElementById("inputTelefone").value);
+  if (inputFoto.files[0]) formData.append("foto", inputFoto.files[0]);
+
+  try {
+    const res = await fetch(`${API}/update`, {
+      method: "PUT",
+      headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` },
+      body: formData
+    });
+    const msg = await res.json();
+    alert(msg.msg || "Perfil atualizado!");
+    carregarPerfil();
+  } catch (e) { alert("Erro ao atualizar perfil!"); console.error(e); }
+
+  editarBtn.style.display="inline-block";
+  botoesEdicao.style.display="none";
+  uploadLabel.style.display="none";
+});
+
+/* === UPLOAD DE FOTO === */
+uploadLabel.addEventListener("click", ()=> inputFoto.click());
+inputFoto.addEventListener("change", (e)=>{
+  const file=e.target.files[0];
+  if(file){
+    const reader=new FileReader();
+    reader.onload=function(ev){
+      fotoPreview.src=ev.target.result;
+      fotoPreview.style.display="block";
+      iconePerfil.style.display="none";
+    };
+    reader.readAsDataURL(file);
+  }
+});
+</script>
+</body>
+</html>

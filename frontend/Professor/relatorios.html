@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Relatórios - CyberClass</title>
+
+<!-- FONTES -->
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --text: #fff;
+  --subtext: #bfbfbf;
+  --border: #2a2a2a;
+  --panel: rgba(15, 15, 15, 0.88);
+  --highlight: #fff;
+  --radius: 14px;
+  --transition: all 0.3s ease;
+}
+
+/* RESET */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+/* ===== BODY ===== */
+body {
+  font-family: 'Poppins', sans-serif;
+  color: var(--text);
+  background: #000;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+
+/* ===== FUNDO ===== */
+.container {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  background: linear-gradient(
+      30deg,
+      #111 12%,
+      transparent 12.5%,
+      transparent 87%,
+      #111 87.5%,
+      #111
+    ),
+    linear-gradient(
+      150deg,
+      #111 12%,
+      transparent 12.5%,
+      transparent 87%,
+      #111 87.5%,
+      #111
+    ),
+    linear-gradient(
+      60deg,
+      #55555522 25%,
+      transparent 25.5%,
+      transparent 75%,
+      #55555522 75%,
+      #55555522
+    );
+  background-size: 80px 140px;
+  animation: moveBg 18s linear infinite alternate;
+}
+@keyframes moveBg {
+  0% { background-position: 0 0, 40px 70px, 0 0; }
+  100% { background-position: 60px 60px, 80px 110px, 40px 40px; }
+}
+
+/* ===== PAINEL ===== */
+.painel {
+  position: relative;
+  z-index: 2;
+  width: 90%;
+  max-width: 1000px;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 50px 45px;
+  backdrop-filter: blur(14px);
+  box-shadow: 0 0 40px rgba(255,255,255,0.05);
+  animation: fadeIn 0.8s ease;
+}
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ===== TÍTULO ===== */
+h2 {
+  font-family: 'Orbitron', sans-serif;
+  text-transform: uppercase;
+  font-size: 1.9rem;
+  margin-bottom: 35px;
+  letter-spacing: 1.5px;
+  border-left: 4px solid var(--highlight);
+  padding-left: 12px;
+}
+
+/* ===== TABELA ===== */
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 30px;
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+.table th, .table td {
+  border: 1px solid var(--border);
+  padding: 14px 16px;
+  text-align: left;
+  font-size: 0.95rem;
+  color: var(--text);
+  transition: var(--transition);
+}
+.table th {
+  background: rgba(255,255,255,0.05);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-weight: 600;
+}
+.table tr {
+  transition: var(--transition);
+}
+.table tr:hover {
+  background: rgba(255,255,255,0.05);
+  transform: scale(1.01);
+}
+
+/* ===== BOTÕES ===== */
+.actions {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+}
+.btn {
+  padding: 12px 26px;
+  border: 1px solid var(--highlight);
+  border-radius: 8px;
+  background: transparent;
+  color: var(--text);
+  font-weight: 500;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: var(--transition);
+}
+.btn:hover {
+  background: var(--highlight);
+  color: #000;
+  transform: translateY(-2px);
+  box-shadow: 0 0 15px rgba(255,255,255,0.3);
+}
+.btn-voltar {
+  display: inline-block;
+  margin-top: 35px;
+  padding: 10px 22px;
+  border: 1px solid #444;
+  border-radius: 8px;
+  background: #111;
+  color: var(--text);
+  text-decoration: none;
+  transition: var(--transition);
+}
+.btn-voltar:hover {
+  background: #fff;
+  color: #000;
+  box-shadow: 0 0 10px rgba(255,255,255,0.25);
+}
+
+/* ===== RODAPÉ ILUMINADO ===== */
+.painel::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 5%;
+  width: 90%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #fff, transparent);
+  opacity: 0.15;
+  animation: glowLine 4s infinite alternate;
+}
+@keyframes glowLine {
+  from { opacity: 0.1; }
+  to { opacity: 0.35; }
+}
+</style>
+</head>
+
+<body>
+<div class="container"></div>
+
+<div class="painel">
+  <h2>Relatórios</h2>
+
+  <table class="table" id="relatoriosTable">
+    <thead>
+      <tr>
+        <th>Relatório</th>
+        <th>Turma</th>
+        <th>Gerado em</th>
+        <th>Ações</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td colspan="4" style="text-align:center;">Carregando...</td></tr>
+    </tbody>
+  </table>
+
+  <div class="actions">
+    <button class="btn" id="btnGerarPDF">📄 Gerar PDF</button>
+    <button class="btn" id="btnGerarIA">🤖 Relatório com IA</button>
+  </div>
+
+  <a href="cards.html" class="btn-voltar">← Voltar</a>
+</div>
+
+<script>
+const API_BASE = "http://127.0.0.1:8000/api";
+const tabela = document.querySelector("#relatoriosTable tbody");
+const btnPDF = document.getElementById("btnGerarPDF");
+const btnIA = document.getElementById("btnGerarIA");
+
+/* === Carregar Relatórios === */
+async function carregarRelatorios() {
+  try {
+    const res = await fetch(`${API_BASE}/relatorios`);
+    const data = await res.json();
+
+    if (!data.length) {
+      tabela.innerHTML = `<tr><td colspan="4" style="text-align:center;">Nenhum relatório disponível</td></tr>`;
+      return;
+    }
+
+    tabela.innerHTML = "";
+    data.forEach(r => {
+      tabela.insertAdjacentHTML("beforeend", `
+        <tr>
+          <td>${r.titulo || "Relatório"}</td>
+          <td>${r.turma_nome || "-"}</td>
+          <td>${new Date(r.data_geracao).toLocaleDateString()}</td>
+          <td><button class="btn" onclick="baixarPDF('${r._id}')">Baixar</button></td>
+        </tr>
+      `);
+    });
+  } catch (err) {
+    tabela.innerHTML = `<tr><td colspan="4" style="text-align:center;">Erro ao carregar relatórios</td></tr>`;
+  }
+}
+
+/* === Gerar PDF === */
+btnPDF.addEventListener("click", async () => {
+  try {
+    const res = await fetch(`${API_BASE}/relatorios/pdf`, { method: "POST" });
+    if (res.ok) {
+      alert("✅ Relatório PDF gerado com sucesso!");
+      carregarRelatorios();
+    } else {
+      alert("❌ Erro ao gerar relatório PDF.");
+    }
+  } catch {
+    alert("❌ Falha na conexão com o servidor.");
+  }
+});
+
+/* === Gerar Relatório com IA === */
+btnIA.addEventListener("click", async () => {
+  try {
+    const res = await fetch(`${API_BASE}/relatorios/ia`, { method: "POST" });
+    if (res.ok) {
+      alert("🤖 Relatório com IA gerado com sucesso!");
+      carregarRelatorios();
+    } else {
+      alert("❌ Erro ao gerar relatório com IA.");
+    }
+  } catch {
+    alert("❌ Falha na conexão com o servidor.");
+  }
+});
+
+/* === Baixar PDF === */
+async function baixarPDF(id) {
+  try {
+    const res = await fetch(`${API_BASE}/relatorios/download/${id}`);
+    const blob = await res.blob();
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "relatorio.pdf";
+    a.click();
+    window.URL.revokeObjectURL(url);
+  } catch {
+    alert("❌ Erro ao baixar o relatório.");
+  }
+}
+
+carregarRelatorios();
+</script>
+</body>
+</html>

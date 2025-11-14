@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Frequência | Sistema Acadêmico</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Orbitron:wght@600&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --dark: #000;
+  --panel: #101010;
+  --border: #222;
+  --accent: #eaf6f7;
+  --accent-hover: #99aaaa;
+  --radius: 14px;
+  --text: #fff;
+  --gray: #1a1a1a;
+  --transition: all 0.3s ease;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'Inter', sans-serif;
+  color: var(--text);
+  background-color: var(--dark);
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  min-height: 100vh;
+  padding: 40px;
+  background-image:
+    linear-gradient(30deg, #111 12%, transparent 12.5%, transparent 87%, #111 87.5%, #111),
+    linear-gradient(150deg, #111 12%, transparent 12.5%, transparent 87%, #111 87.5%, #111),
+    linear-gradient(60deg, #55555533 25%, transparent 25.5%, transparent 75%, #55555533 75%, #55555533);
+  background-size: 80px 140px;
+  background-position: 0 0, 40px 70px, 0 0;
+  box-shadow: inset 0 0 100px rgba(255,255,255,0.05);
+  animation: backgroundMove 15s linear infinite alternate;
+}
+@keyframes backgroundMove {
+  0% { background-position: 0 0, 40px 70px, 0 0; }
+  100% { background-position: 40px 40px, 80px 110px, 40px 40px; }
+}
+
+/* Painel principal */
+.painel {
+  background: linear-gradient(145deg, rgba(15,15,15,0.95), rgba(20,20,20,0.9));
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  width: 100%;
+  max-width: 1100px;
+  padding: 45px;
+  box-shadow: 0 0 40px rgba(0,0,0,0.6), inset 0 0 15px rgba(255,255,255,0.03);
+  animation: fadeIn 0.8s ease;
+  backdrop-filter: blur(10px);
+}
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(15px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Título */
+h1 {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 2rem;
+  color: var(--accent);
+  letter-spacing: 1px;
+  margin-bottom: 35px;
+  text-shadow: 0 0 10px rgba(244, 248, 248, 0.4);
+}
+
+/* Seletor de turma */
+label {
+  font-weight: 600;
+  font-size: 1rem;
+  color: #ccc;
+  margin-bottom: 10px;
+  display: block;
+}
+#turma {
+  width: 100%;
+  background: #0f0f0f;
+  border: 1px solid #333;
+  color: #fff;
+  padding: 14px;
+  border-radius: 8px;
+  margin-bottom: 30px;
+  font-size: 1rem;
+  transition: var(--transition);
+}
+#turma:hover { border-color: var(--accent-hover); }
+#turma:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 8px rgba(247, 247, 247, 0.3);
+  outline: none;
+}
+
+/* Tabela */
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  background: rgba(10,10,10,0.8);
+  border-radius: var(--radius);
+  overflow: hidden;
+  backdrop-filter: blur(4px);
+}
+.table th, .table td {
+  padding: 14px 16px;
+  border: 1px solid var(--border);
+  text-align: left;
+}
+.table th {
+  background: rgba(30,30,30,0.95);
+  color: var(--accent);
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 0.9rem;
+}
+.table tr:hover {
+  background: rgba(0,206,209,0.08);
+  transition: 0.3s;
+}
+.status-select {
+  background: #0f0f0f;
+  color: #fff;
+  border: 1px solid #333;
+  border-radius: 6px;
+  padding: 8px 10px;
+  width: 100%;
+  transition: var(--transition);
+}
+.status-select:hover { border-color: var(--accent); }
+
+/* Botões */
+button, .btn-voltar {
+  display: inline-block;
+  margin-top: 25px;
+  padding: 12px 26px;
+  background: var(--accent);
+  color: #000;
+  border: none;
+  text-decoration: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition);
+  font-size: 1rem;
+}
+button:hover, .btn-voltar:hover {
+  background: var(--accent-hover);
+  box-shadow: 0 0 15px rgba(253, 253, 253, 0.4);
+  transform: translateY(-2px);
+}
+.btn-voltar {
+  background: transparent;
+  color: var(--text);
+  border: 1px solid var(--accent);
+  margin-left: 10px;
+}
+.btn-voltar:hover {
+  background: var(--accent);
+  color: #000;
+}
+</style>
+</head>
+
+<body>
+<div class="painel">
+  <h1>Frequência</h1>
+
+  <label for="turma">Selecione a Turma:</label>
+  <select id="turma">
+    <option value="">-- Escolher turma --</option>
+  </select>
+
+  <table class="table" id="tabelaFrequencia">
+    <thead>
+      <tr><th>Aluno</th><th>Status</th></tr>
+    </thead>
+    <tbody>
+      <tr><td colspan="2" style="text-align:center;">Selecione uma turma para carregar os alunos</td></tr>
+    </tbody>
+  </table>
+
+  <div style="margin-top:30px;">
+    <button id="salvarBtn" style="display:none;">💾 Salvar Frequência</button>
+    <a href="cards.html" class="btn-voltar">← Voltar</a>
+  </div>
+</div>
+
+<script>
+const API_URL = "http://127.0.0.1:8000/api";
+
+// === Carregar turmas ===
+async function carregarTurmas() {
+  try {
+    const res = await fetch(`${API_URL}/turmas`);
+    const turmas = await res.json();
+    const select = document.getElementById("turma");
+    turmas.forEach(t => {
+      const opt = document.createElement("option");
+      opt.value = t.id;
+      opt.textContent = t.nome;
+      select.appendChild(opt);
+    });
+  } catch (err) {
+    console.error("Erro ao carregar turmas:", err);
+  }
+}
+
+// === Carregar alunos por turma ===
+async function carregarAlunos(turmaId) {
+  const tabela = document.getElementById("tabelaFrequencia").querySelector("tbody");
+  const salvarBtn = document.getElementById("salvarBtn");
+  tabela.innerHTML = `<tr><td colspan="2" style="text-align:center;">Carregando alunos...</td></tr>`;
+
+  try {
+    const res = await fetch(`${API_URL}/turmas/${turmaId}/alunos`);
+    const alunos = await res.json();
+
+    tabela.innerHTML = "";
+    if (alunos.length === 0) {
+      tabela.innerHTML = `<tr><td colspan="2" style="text-align:center;">Nenhum aluno encontrado.</td></tr>`;
+      salvarBtn.style.display = "none";
+      return;
+    }
+
+    alunos.forEach(aluno => {
+      const tr = document.createElement("tr");
+      tr.innerHTML = `
+        <td>${aluno.nome}</td>
+        <td>
+          <select class="status-select">
+            <option value="Presente">Presente</option>
+            <option value="Falta Justificada">Falta Justificada</option>
+            <option value="Falta">Falta</option>
+          </select>
+        </td>`;
+      tabela.appendChild(tr);
+    });
+
+    salvarBtn.style.display = "inline-block";
+  } catch (err) {
+    console.error("Erro ao carregar alunos:", err);
+    tabela.innerHTML = `<tr><td colspan="2" style="text-align:center;">Erro ao carregar alunos.</td></tr>`;
+  }
+}
+
+// === Salvar frequência ===
+async function salvarFrequencia() {
+  const turmaId = document.getElementById("turma").value;
+  const linhas = document.querySelectorAll("#tabelaFrequencia tbody tr");
+  const registros = [];
+
+  linhas.forEach(linha => {
+    const aluno = linha.children[0].textContent;
+    const status = linha.querySelector("select").value;
+    registros.push({ aluno, turma_id: turmaId, status });
+  });
+
+  try {
+    const res = await fetch(`${API_URL}/frequencia`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(registros)
+    });
+    if (!res.ok) throw new Error("Erro ao salvar frequência");
+    alert("✅ Frequência salva com sucesso!");
+    document.getElementById("turma").value = "";
+    document.querySelector("#tabelaFrequencia tbody").innerHTML =
+      `<tr><td colspan="2" style="text-align:center;">Selecione uma turma para carregar os alunos</td></tr>`;
+    document.getElementById("salvarBtn").style.display = "none";
+  } catch (err) {
+    alert("❌ Erro ao salvar frequência.");
+    console.error(err);
+  }
+}
+
+// Eventos
+document.getElementById("turma").addEventListener("change", e => {
+  const turmaId = e.target.value;
+  if (turmaId) carregarAlunos(turmaId);
+});
+
+document.getElementById("salvarBtn").addEventListener("click", salvarFrequencia);
+
+// Inicialização
+carregarTurmas();
+</script>
+</body>
+</html>

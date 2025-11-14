@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Painel do Aluno - CyberClass</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+:root {
+  --text: #fff;
+  --dark: #000;
+  --border: #222;
+  --radius: 14px;
+  --transition: all 0.35s ease;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'Inter', sans-serif;
+  color: var(--text);
+  display: flex;
+  min-height: 100vh;
+  background-color: var(--dark);
+  background-image:
+    linear-gradient(30deg, #111 12%, transparent 12.5%, transparent 87%, #111 87.5%, #111),
+    linear-gradient(150deg, #111 12%, transparent 12.5%, transparent 87%, #111 87.5%, #111),
+    linear-gradient(60deg, #44444455 25%, transparent 25.5%, transparent 75%, #44444455 75%, #44444455);
+  background-size: 80px 140px;
+  box-shadow: inset 0 0 100px rgba(255,255,255,0.05);
+  overflow-x: hidden;
+}
+
+/* === SIDEBAR === */
+.sidebar {
+  width: 260px;
+  background: rgba(10,10,10,0.95);
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition: var(--transition);
+  backdrop-filter: blur(6px);
+  position: fixed;
+  height: 100%;
+  z-index: 10;
+  padding-top: 25px;
+  left: 0;
+}
+.sidebar.collapsed { width: 90px; }
+
+.logo {
+  width: 120px;
+  margin-bottom: 10px;
+  transition: var(--transition);
+}
+.sidebar.collapsed .logo { width: 55px; }
+
+.sidebar-title {
+  font-family: 'Orbitron';
+  font-size: 18px;
+  font-weight: 600;
+  color: #fff;
+  margin-bottom: 25px;
+  text-align: center;
+  transition: 0.3s;
+}
+.sidebar.collapsed .sidebar-title {
+  opacity: 0;
+  height: 0;
+  margin: 0;
+  overflow: hidden;
+}
+
+.toggle-btn {
+  position: absolute;
+  top: 20px;
+  right: -18px;
+  background: #111;
+  border: 1px solid #555;
+  color: #fff;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: var(--transition);
+}
+.toggle-btn:hover { background: #fff; color: #000; transform: scale(1.1); }
+
+/* menu */
+nav {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  margin-top: 10px;
+}
+.nav-link {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 22px;
+  color: #ccc;
+  text-decoration: none;
+  border-radius: 10px;
+  margin: 4px 12px;
+  transition: var(--transition);
+}
+.nav-link:hover { background: rgba(255,255,255,0.1); color: #fff; }
+.nav-link.active { background: rgba(255,255,255,0.2); box-shadow: inset 3px 0 #fff; }
+.nav-icon { width: 24px; text-align: center; font-size: 18px; }
+
+.sidebar.collapsed .nav-link { justify-content: center; padding: 14px 0; }
+.sidebar.collapsed .nav-text { display: none; }
+
+/* === MAIN === */
+.main {
+  flex: 1;
+  padding: 40px;
+  margin-left: 260px;
+  transition: margin-left 0.35s ease;
+}
+.sidebar.collapsed ~ .main { margin-left: 90px; }
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+  border-bottom: 1px solid var(--border);
+}
+.header h1 {
+  font-family: 'Orbitron';
+  font-size: 26px;
+  color: #fff;
+}
+
+/* cards */
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 20px;
+  margin-bottom: 30px;
+}
+.card {
+  background: rgba(15,15,15,0.85);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 25px;
+  text-align: center;
+}
+.card h3 { color: #bbb; font-size: 14px; margin-bottom: 10px; }
+.card p { font-size: 30px; color: #fff; }
+
+/* graficos */
+.graphs {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 25px;
+  margin-bottom: 35px;
+}
+.graph {
+  background: rgba(15,15,15,0.9);
+  border: 1px solid #333;
+  border-radius: var(--radius);
+  padding: 25px;
+}
+.chart-container {
+  background: rgba(0,0,0,0.6);
+  border-radius: 12px;
+  padding: 15px;
+  height: 320px;
+}
+
+/* atividades */
+.activity {
+  background: rgba(15,15,15,0.85);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 25px;
+}
+.activity-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 15px 0;
+  border-bottom: 1px solid var(--border);
+  color: #ccc;
+}
+</style>
+</head>
+
+<body>
+
+<!-- SIDEBAR -->
+<div class="sidebar" id="sidebar">
+  <img src="../assets/images/logo_icon.png" class="logo">
+  <h2 class="sidebar-title">Painel do Aluno</h2>
+
+  <button class="toggle-btn" id="toggleBtn"><i class="fas fa-angle-left"></i></button>
+
+  <nav>
+    <a href="cards.html" class="nav-link active"><i class="fas fa-home nav-icon"></i><span class="nav-text">Início</span></a>
+    <a href="atividades.html" class="nav-link"><i class="fas fa-file-alt nav-icon"></i><span class="nav-text">Atividades</span></a>
+    <a href="frequencia.html" class="nav-link"><i class="fas fa-user-check nav-icon"></i><span class="nav-text">Frequência</span></a>
+    <a href="notas.html" class="nav-link"><i class="fas fa-graduation-cap nav-icon"></i><span class="nav-text">Notas</span></a>
+    <a href="perfil.html" class="nav-link"><i class="fas fa-user nav-icon"></i><span class="nav-text">Perfil</span></a>
+    <a href="suporte.html" class="nav-link"><i class="fas fa-headset nav-icon"></i><span class="nav-text">Suporte</span></a>
+  </nav>
+</div>
+
+<!-- MAIN -->
+<div class="main" id="main">
+  <div class="header">
+    <h1>Painel do Aluno</h1>
+  </div>
+
+  <!-- CARDS -->
+  <div class="cards">
+    <div class="card"><h3>Média Geral</h3><p id="mediaGeral">--</p></div>
+    <div class="card"><h3>Presenças</h3><p id="presencas">--</p></div>
+    <div class="card"><h3>Faltas</h3><p id="faltas">--</p></div>
+    <div class="card"><h3>Atividades</h3><p id="atividades">--</p></div>
+  </div>
+
+  <!-- GRÁFICOS -->
+  <div class="graphs">
+    <div class="graph"><div class="chart-container"><canvas id="notasChart"></canvas></div></div>
+    <div class="graph"><div class="chart-container"><canvas id="frequenciaChart"></canvas></div></div>
+  </div>
+
+  <!-- ATIVIDADES -->
+  <div class="activity" id="atividadeContainer">Carregando...</div>
+</div>
+
+<script>
+/* ================================
+   DADOS CIENTÍFICOS — FALLBACK
+================================*/
+const CIENTIFICOS = {
+  overview: { media_geral: 8.4, presencas: 91, faltas: 12, atividades: 27 },
+  notas: {
+    meses: ["Mar", "Abr", "Mai", "Jun", "Jul", "Ago"],
+    medias: [7.8, 8.1, 8.4, 8.0, 8.7, 9.0]
+  },
+  frequencia: { presencas: 91 },
+  atividades: [
+    { descricao: "Análise de DNA e Genética Mendeliana", tempo: "há 1 dia" },
+    { descricao: "Energia Nuclear e Reações Controladas", tempo: "há 2 dias" },
+    { descricao: "Crescimento Populacional — Função Exponencial", tempo: "há 5 dias" },
+    { descricao: "Impacto do CO₂ no Aquecimento Global", tempo: "há 1 semana" }
+  ]
+};
+
+const API = "http://127.0.0.1:8000/api/aluno";
+
+/* ================================
+   SIDEBAR
+================================*/
+const sidebar = document.getElementById("sidebar");
+const main = document.getElementById("main");
+document.getElementById("toggleBtn").onclick = () => {
+  sidebar.classList.toggle("collapsed");
+  main.style.marginLeft = sidebar.classList.contains("collapsed") ? "90px" : "260px";
+};
+
+/* ================================
+   RESUMO
+================================*/
+async function carregarResumo() {
+  try {
+    const r = await fetch(`${API}/overview`);
+    if (!r.ok) throw 0;
+
+    const d = await r.json();
+    document.getElementById("mediaGeral").textContent = d.media_geral;
+    document.getElementById("presencas").textContent = d.presencas + "%";
+    document.getElementById("faltas").textContent = d.faltas;
+    document.getElementById("atividades").textContent = d.atividades;
+  } catch {
+    document.getElementById("mediaGeral").textContent = CIENTIFICOS.overview.media_geral;
+    document.getElementById("presencas").textContent = CIENTIFICOS.overview.presencas + "%";
+    document.getElementById("faltas").textContent = CIENTIFICOS.overview.faltas;
+    document.getElementById("atividades").textContent = CIENTIFICOS.overview.atividades;
+  }
+}
+
+/* ================================
+   GRÁFICOS
+================================*/
+async function carregarGraficos() {
+  let notas, freq;
+
+  try {
+    notas = await fetch(`${API}/notas`).then(r => r.json());
+    freq = await fetch(`${API}/frequencia`).then(r => r.json());
+  } catch {
+    notas = CIENTIFICOS.notas;
+    freq = CIENTIFICOS.frequencia;
+  }
+
+  // Notas
+  new Chart(document.getElementById("notasChart"), {
+    type: "line",
+    data: {
+      labels: notas.meses,
+      datasets: [{
+        label: "Notas",
+        data: notas.medias,
+        borderColor: "#00aaff",
+        backgroundColor: "rgba(0,170,255,0.2)",
+        fill: true,
+        tension: 0.4
+      }]
+    },
+    options: {
+      plugins: { legend: { labels: { color: "#fff" } } },
+      scales: {
+        x: { ticks: { color: "#ccc" } },
+        y: { ticks: { color: "#ccc" }, min: 0, max: 10 }
+      }
+    }
+  });
+
+  // Frequência
+  let p = freq.presencas;
+  let cor = p >= 75 ? "#00d66c" : p >= 65 ? "#f5c542" : "#ff3b3b";
+
+  new Chart(document.getElementById("frequenciaChart"), {
+    type: "doughnut",
+    data: {
+      labels: ["Presenças", "Faltas"],
+      datasets: [{
+        data: [p, 100 - p],
+        backgroundColor: [cor, "#444"]
+      }]
+    },
+    options: {
+      plugins: {
+        legend: { labels: { color: "#fff" } },
+        title: { display: true, text: `Frequência: ${p}%`, color: "#fff" }
+      },
+      cutout: "70%"
+    }
+  });
+}
+
+/* ================================
+   ATIVIDADES
+================================*/
+async function carregarAtividades() {
+  let lista;
+
+  try {
+    const r = await fetch(`${API}/atividades`);
+    if (!r.ok) throw 0;
+    lista = await r.json();
+  } catch {
+    lista = CIENTIFICOS.atividades;
+  }
+
+  const container = document.getElementById("atividadeContainer");
+  container.innerHTML = "<h3>Atividades Recentes</h3>";
+
+  lista.forEach(a => {
+    container.innerHTML += `
+      <div class="activity-item">
+        <div>📘 ${a.descricao}</div>
+        <small>${a.tempo}</small>
+      </div>
+    `;
+  });
+}
+
+/* ================================
+   INICIALIZAÇÃO
+================================*/
+carregarResumo();
+carregarGraficos();
+carregarAtividades();
+</script>
+</body>
+</html>

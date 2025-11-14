@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Suporte do Professor - CyberClass</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --primary: #00aaff;
+  --primary-light: #66d1ff;
+  --bg-dark: #0e0e0e;
+  --panel: rgba(20,20,20,0.95);
+  --border: #2a2a2a;
+  --text: #fff;
+  --bot-msg: #1c1c1c;
+  --user-msg: #00aaff;
+  --radius: 18px;
+  --transition: all 0.3s ease;
+}
+
+/* ===== RESET ===== */
+* {margin:0; padding:0; box-sizing:border-box;}
+body {
+  font-family: 'Poppins', sans-serif;
+  background: var(--bg-dark);
+  color: var(--text);
+  height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  overflow:hidden;
+}
+
+/* ===== FUNDO ANIMADO ===== */
+.container {
+  position:fixed;
+  inset:0;
+  z-index:0;
+  --s:200px;
+  background:
+    repeating-conic-gradient(from 30deg,#0000 0 120deg,#111 0 180deg)
+    calc(0.5*var(--s)) calc(0.5*var(--s)*0.577),
+    repeating-conic-gradient(from 30deg,#0f0f0f 0 60deg,#1a1a1a 0 120deg,#111 0 180deg);
+  background-size:var(--s) calc(var(--s)*0.577);
+  animation:bgMove 10s linear infinite alternate;
+  filter: brightness(0.9);
+}
+@keyframes bgMove {0%{background-position:0 0;}100%{background-position:60px 60px;}}
+
+/* ===== CAIXA DE CHAT ===== */
+.chat-box {
+  position:relative;
+  z-index:2;
+  width:90%;
+  max-width:380px;
+  background: var(--panel);
+  border-radius:20px;
+  overflow:hidden;
+  box-shadow:0 0 25px rgba(0,0,0,0.6);
+  display:flex;
+  flex-direction:column;
+  animation:fadeIn 0.6s ease;
+}
+@keyframes fadeIn {from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+
+/* ===== CABEÇALHO ===== */
+.header {
+  background: linear-gradient(135deg, var(--primary), var(--primary-light));
+  padding:14px 18px;
+  display:flex;
+  align-items:center;
+  gap:10px;
+  color:#fff;
+  box-shadow: 0 2px 8px rgba(0,170,255,0.3);
+}
+.header img {
+  width:42px;
+  height:42px;
+  border-radius:50%;
+  border:2px solid #fff;
+}
+.header-info { display:flex; flex-direction:column; line-height:1.1; }
+.header-info span:first-child { font-weight:600; font-size:15px; }
+.status { font-size:12px; color:#eaffea; }
+
+/* ===== CONVERSA ===== */
+#conversation {
+  flex:1;
+  padding:15px;
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+  overflow-y:auto;
+  background:rgba(15,15,15,0.92);
+  scroll-behavior:smooth;
+}
+
+.msg {
+  max-width:80%;
+  padding:10px 14px;
+  border-radius:var(--radius);
+  font-size:14px;
+  line-height:1.4;
+  word-wrap:break-word;
+  animation:popIn 0.3s ease;
+}
+@keyframes popIn {from{opacity:0;transform:scale(0.95);}to{opacity:1;transform:scale(1);}}
+.msg.bot {
+  background: var(--bot-msg);
+  align-self:flex-start;
+  border:1px solid #2a2a2a;
+  color:#ccc;
+}
+.msg.user {
+  background: var(--user-msg);
+  align-self:flex-end;
+  color:#fff;
+  border:1px solid #00aaff66;
+}
+
+/* ===== DIGITAÇÃO ===== */
+.typing {
+  display:inline-block;
+  padding:8px 12px;
+  background:#1c1c1c;
+  border-radius:var(--radius);
+  border:1px solid #222;
+  width:60px;
+  text-align:center;
+}
+.dot {
+  height:6px;
+  width:6px;
+  background:#aaa;
+  border-radius:50%;
+  display:inline-block;
+  margin:0 2px;
+  animation:blink 1.4s infinite both;
+}
+.dot:nth-child(2){animation-delay:0.2s;}
+.dot:nth-child(3){animation-delay:0.4s;}
+@keyframes blink {
+  0%,80%,100% {opacity:0;}
+  40% {opacity:1;}
+}
+
+/* ===== FORM ===== */
+form {
+  display:flex;
+  padding:12px;
+  background:#111;
+  border-top:1px solid var(--border);
+  gap:8px;
+}
+input[type="text"] {
+  flex:1;
+  border:none;
+  border-radius:var(--radius);
+  background:#1a1a1a;
+  color:#fff;
+  padding:10px 14px;
+  font-size:14px;
+}
+input[type="text"]:focus {
+  outline:none;
+  border:1px solid var(--primary);
+}
+button {
+  background: var(--primary);
+  border:none;
+  color:#fff;
+  font-weight:600;
+  padding:10px 18px;
+  border-radius:var(--radius);
+  cursor:pointer;
+  transition:var(--transition);
+}
+button:hover {
+  background: var(--primary-light);
+  transform:scale(1.05);
+  box-shadow:0 0 10px rgba(0,170,255,0.4);
+}
+
+/* ===== BOTÃO VOLTAR ===== */
+.btn-voltar {
+  background:none;
+  border:none;
+  color:#ccc;
+  cursor:pointer;
+  text-decoration:underline;
+  font-size:13px;
+  align-self:center;
+  margin:10px 0;
+  transition:0.3s;
+}
+.btn-voltar:hover {color:#fff;}
+</style>
+</head>
+
+<body>
+  <div class="container"></div>
+
+  <div class="chat-box">
+    <div class="header">
+      <img src="https://cdn-icons-png.flaticon.com/512/4333/4333609.png" alt="avatar">
+      <div class="header-info">
+        <span>Lucas - Assistente CyberClass</span>
+        <span class="status">🟢 Online agora</span>
+      </div>
+    </div>
+
+    <div id="conversation">
+      <div class="msg bot">Olá, professor(a)! 👋<br>Sou o Lucas, assistente virtual da CyberClass.<br>Como posso ajudar hoje?</div>
+    </div>
+
+    <form id="chat-form">
+      <input type="text" name="q" placeholder="Digite sua dúvida..." autocomplete="off" />
+      <button type="submit">Enviar</button>
+    </form>
+
+    <button class="btn-voltar" onclick="window.location.href='cards.html'">← Voltar</button>
+  </div>
+
+<script>
+const conversation = document.getElementById("conversation");
+const form = document.getElementById("chat-form");
+
+form.addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const input = e.target.q;
+  const text = input.value.trim();
+  if (!text) return;
+
+  // Adiciona mensagem do usuário
+  conversation.insertAdjacentHTML("beforeend", `<div class='msg user'>${text}</div>`);
+  input.value = "";
+
+  // Exibe indicador de digitação
+  const typingEl = document.createElement("div");
+  typingEl.classList.add("typing");
+  typingEl.innerHTML = "<span class='dot'></span><span class='dot'></span><span class='dot'></span>";
+  conversation.appendChild(typingEl);
+  conversation.scrollTop = conversation.scrollHeight;
+
+  try {
+    // Envia requisição para backend FastAPI
+    const res = await fetch("http://127.0.0.1:8000/api/suporte", {
+      method: "POST",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({ pergunta: text })
+    });
+    const data = await res.json();
+    setTimeout(() => {
+      typingEl.remove();
+      conversation.insertAdjacentHTML("beforeend", `<div class='msg bot'>${data.resposta || "Estou verificando sua dúvida... 💬"}</div>`);
+      conversation.scrollTop = conversation.scrollHeight;
+    }, 1000);
+  } catch (err) {
+    typingEl.remove();
+    conversation.insertAdjacentHTML("beforeend", `<div class='msg bot'>❌ Erro ao conectar com o servidor de suporte.</div>`);
+  }
+});
+</script>
+</body>
+</html>

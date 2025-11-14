@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CyberClass — Login</title>
+
+<style>
+/* =================== RESET =================== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Poppins", sans-serif;
+}
+
+body {
+  display: flex;
+  height: 100vh;
+  overflow: hidden;
+  background: #000;
+  color: #fff;
+}
+
+/* =================== LADO ESQUERDO — FUNDO ANIMADO =================== */
+.left-panel {
+  flex: 1;
+  background: url("../assets/images/fundo_animado.png") center/cover no-repeat;
+  animation: pulse 7s infinite alternate ease-in-out;
+  filter: brightness(0.85);
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); opacity: .9; }
+  100% { transform: scale(1.13); opacity: 1; }
+}
+
+/* =================== LADO DIREITO — LOGIN =================== */
+.right-panel {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 40px;
+  background: radial-gradient(circle at bottom left, #0b0b0b 0%, #000 100%);
+}
+
+.login-box {
+  width: 100%;
+  max-width: 420px;
+  text-align: center;
+  background: rgba(255,255,255,0.07);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 18px;
+  backdrop-filter: blur(14px);
+  padding: 40px;
+  box-shadow: 0 0 25px rgba(255,255,255,0.08);
+}
+
+/* =================== LOGO =================== */
+.logo {
+  width: 170px;
+  margin: 0 auto 15px;
+  display: block;
+}
+
+/* =================== TITULOS =================== */
+.login-box h1 {
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+.login-box p {
+  font-size: 13px;
+  color: #ccc;
+  margin-bottom: 28px;
+}
+
+/* =================== INPUTS =================== */
+label {
+  display: block;
+  font-size: 14px;
+  color: #ccc;
+  text-align: left;
+}
+
+input {
+  width: 100%;
+  padding: 12px;
+  margin: 8px 0 22px;
+  background: rgba(255,255,255,0.12);
+  border: none;
+  border-radius: 8px;
+  color: #fff;
+}
+
+input:focus {
+  outline: none;
+  box-shadow: 0 0 6px rgba(255,255,255,0.6);
+}
+
+/* =================== BOTÃO =================== */
+button {
+  width: 100%;
+  padding: 12px;
+  font-weight: 600;
+  border: none;
+  background: #fff;
+  color: #000;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: .3s;
+}
+
+button:hover {
+  background: #e6e6e6;
+  transform: scale(1.03);
+}
+
+/* =================== LINKS =================== */
+.links {
+  margin-top: 18px;
+}
+
+.links a {
+  color: #bbb;
+  text-decoration: none;
+  font-size: 13px;
+}
+
+.links a:hover {
+  color: #fff;
+}
+
+/* =================== RESPONSIVO =================== */
+@media (max-width: 900px) {
+  body { flex-direction: column; }
+  .left-panel { height: 40vh; }
+  .right-panel { height: 60vh; }
+}
+</style>
+</head>
+
+<body>
+
+<!-- ================= LADO ESQUERDO ================= -->
+<div class="left-panel"></div>
+
+<!-- ================= LADO DIREITO ================= -->
+<div class="right-panel">
+  <div class="login-box">
+
+    <!-- LOGO -->
+    <img src="../assets/images/logo_full.png" class="logo" alt="CyberClass">
+
+    <h1>CyberClass</h1>
+    <p>Sistema acadêmico com inteligência artificial</p>
+
+    <form id="loginForm">
+      <label for="email">E-mail</label>
+      <input type="email" id="email" placeholder="Digite seu e-mail" required>
+
+      <label for="senha">Senha</label>
+      <input type="password" id="senha" placeholder="Digite sua senha" required>
+
+      <button type="submit">Acessar</button>
+
+      <div class="links">
+        <a href="esqueceu.html">Esqueceu a senha?</a><br>
+        <a href="register.html">Criar conta</a>
+      </div>
+    </form>
+
+  </div>
+</div>
+
+<!-- ================= JS LOGIN SIMPLES ================= -->
+<script>
+document.getElementById("loginForm").addEventListener("submit", async (e) => {
+  e.preventDefault();
+
+  const email = document.getElementById("email").value;
+  const senha = document.getElementById("senha").value;
+
+  // Aqui você integra com seu backend
+  // Exemplo:
+  /*
+  const response = await fetch("http://127.0.0.1:8000/api/login", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email, senha })
+  });
+
+  const data = await response.json();
+
+  if (data.access_token) {
+    localStorage.setItem("token", data.access_token);
+    window.location.href = "../cards/cards.html";
+  }
+  */
+
+  alert("Bem-vindo, " + email.split("@")[0] + "!");
+});
+</script>
+
+</body>
+</html>

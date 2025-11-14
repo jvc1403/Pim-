@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Perfil</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<style>
+:root {
+  --text:#fff;
+  --bg:#000;
+  --panel:#111;
+  --border:#222;
+  --radius:16px;
+}
+
+/* ======== BASE ======== */
+* { margin:0; padding:0; box-sizing:border-box; }
+body { background:var(--bg); color:var(--text); font-family:'Inter',sans-serif; display:flex; }
+
+/* ======== SIDEBAR ======== */
+.sidebar {
+  width:260px;
+  background:#111;
+  border-right:1px solid var(--border);
+  position:fixed; inset:0 auto 0 0;
+  padding-top:50px;
+  transition:.35s;
+  display:flex; flex-direction:column; align-items:center;
+}
+.sidebar.collapsed { width:90px; }
+
+.logo {
+  width:110px;
+  margin-bottom:20px;
+  transition:.35s;
+}
+.sidebar.collapsed .logo { width:55px; }
+
+.toggle-btn {
+  position:absolute; top:20px; right:-18px;
+  width:38px; height:38px;
+  border-radius:50%; border:1px solid #555;
+  background:#0f0f0f; color:#fff;
+  cursor:pointer;
+  display:flex; align-items:center; justify-content:center;
+  transition:.3s;
+}
+.toggle-btn:hover { background:#fff; color:#000; }
+
+nav { width:100%; display:flex; flex-direction:column; align-items:center; }
+.nav-link {
+  width:85%; padding:14px 20px;
+  margin:5px 0;
+  display:flex; align-items:center; gap:14px;
+  text-decoration:none; color:#bbb;
+  border-radius:10px;
+  transition:.3s;
+}
+.nav-link:hover { background:#333; color:#fff; }
+.nav-link.active { background:#444; box-shadow:inset 2px 0 #fff; }
+
+.sidebar.collapsed .nav-text { display:none; }
+.sidebar.collapsed .nav-link { justify-content:center; }
+
+/* ======== MAIN ======== */
+.main {
+  flex:1;
+  margin-left:260px;
+  padding:50px;
+  transition:.35s;
+}
+.sidebar.collapsed ~ .main { margin-left:90px; }
+
+h1 {
+  font-family:'Poppins',sans-serif;
+  font-size:28px;
+  display:flex;
+  align-items:center;
+  gap:12px;
+  margin-bottom:25px;
+}
+
+/* ======== CARD PERFIL ======== */
+.profile-card {
+  width:100%;
+  max-width:700px;
+  background:var(--panel);
+  border:1px solid var(--border);
+  padding:30px;
+  margin:auto;
+  border-radius:var(--radius);
+  box-shadow:0 0 25px rgba(255,255,255,0.05);
+}
+
+/* FOTO */
+.profile-photo {
+  width:140px; height:140px;
+  border-radius:50%;
+  overflow:hidden;
+  margin:auto;
+  border:3px solid #fff;
+  box-shadow:0 0 15px rgba(255,255,255,0.3);
+}
+.profile-photo img {
+  width:100%; height:100%; object-fit:cover;
+}
+
+/* INFO */
+.info-item {
+  display:flex; justify-content:space-between;
+  margin:15px 0;
+  padding:12px;
+  border-bottom:1px solid #333;
+}
+.info-label { color:#aaa; }
+.info-value { font-weight:600; }
+
+/* BOTÃO EDITAR */
+.btn {
+  padding:10px 20px;
+  background:#fff;
+  color:#000;
+  font-weight:600;
+  border-radius:10px;
+  cursor:pointer;
+  border:none;
+  margin-top:20px;
+  transition:.3s;
+}
+.btn:hover { transform:scale(1.05); }
+
+input.edit {
+  background:transparent;
+  border:none;
+  border-bottom:1px solid #fff;
+  color:#fff;
+  font-size:15px;
+  outline:none;
+  text-align:right;
+}
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<div class="sidebar" id="sidebar">
+  <img src="../assets/images/logo_icon.png" class="logo">
+
+  <button class="toggle-btn" id="toggleBtn">
+    <i class="fas fa-angle-left"></i>
+  </button>
+
+  <nav>
+    <a href="cards.html" class="nav-link"><i class="fas fa-home nav-icon"></i><span class="nav-text">Início</span></a>
+    <a href="atividades.html" class="nav-link"><i class="fas fa-file-alt nav-icon"></i><span class="nav-text">Atividades</span></a>
+    <a href="frequencia.html" class="nav-link"><i class="fas fa-user-check nav-icon"></i><span class="nav-text">Frequência</span></a>
+    <a href="notas.html" class="nav-link"><i class="fas fa-graduation-cap nav-icon"></i><span class="nav-text">Notas</span></a>
+    <a href="perfil.html" class="nav-link active"><i class="fas fa-user nav-icon"></i><span class="nav-text">Perfil</span></a>
+    <a href="suporte.html" class="nav-link"><i class="fas fa-headset nav-icon"></i><span class="nav-text">Suporte</span></a>
+  </nav>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+  <h1><i class="fas fa-user"></i> Perfil do Aluno</h1>
+
+  <div class="profile-card">
+
+    <!-- FOTO -->
+    <div class="profile-photo">
+      <img id="fotoPerfil" src="../assets/images/profile_default.jpg" alt="Foto">
+    </div>
+
+    <!-- INFORMAÇÕES -->
+    <div class="info-item">
+      <span class="info-label">Nome:</span>
+      <span class="info-value" id="nomeInfo">Renan Oliveira</span>
+    </div>
+
+    <div class="info-item">
+      <span class="info-label">E-mail:</span>
+      <span class="info-value" id="emailInfo">renan@email.com</span>
+    </div>
+
+    <div class="info-item">
+      <span class="info-label">Matrícula:</span>
+      <span class="info-value">202500123</span>
+    </div>
+
+    <div class="info-item">
+      <span class="info-label">Curso:</span>
+      <span class="info-value">ADS</span>
+    </div>
+
+    <div class="info-item">
+      <span class="info-label">Período:</span>
+      <span class="info-value">3º Semestre</span>
+    </div>
+
+    <button class="btn" id="editarBtn">Editar Perfil</button>
+
+    <div style="display:none" id="editarArea">
+      <input class="edit" id="nomeEdit" value="Renan Oliveira"><br><br>
+      <button class="btn" id="salvarBtn">Salvar</button>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// SIDEBAR
+const sidebar = document.getElementById("sidebar");
+document.getElementById("toggleBtn").onclick = () => {
+  sidebar.classList.toggle("collapsed");
+  const icon = document.querySelector("#toggleBtn i");
+  icon.classList.toggle("fa-angle-left");
+  icon.classList.toggle("fa-angle-right");
+};
+
+// BACKEND + DADOS LOCAIS
+const API_URL = "http://127.0.0.1:8000/api/perfil";
+
+async function carregarPerfil() {
+  let dados = {
+    nome: "Renan Oliveira",
+    email: "renan@email.com",
+    foto: "../assets/images/profile_default.jpg"
+  };
+
+  try {
+    const res = await fetch(API_URL);
+    if (res.ok) dados = await res.json();
+  } catch (e) { console.log("Backend fora, usando simulação."); }
+
+  document.getElementById("nomeInfo").textContent = dados.nome;
+  document.getElementById("emailInfo").textContent = dados.email;
+  document.getElementById("fotoPerfil").src = dados.foto;
+}
+
+// EDIÇÃO
+document.getElementById("editarBtn").onclick = () => {
+  document.getElementById("editarArea").style.display = "block";
+};
+
+document.getElementById("salvarBtn").onclick = () => {
+  const novoNome = document.getElementById("nomeEdit").value;
+  document.getElementById("nomeInfo").textContent = novoNome;
+  document.getElementById("editarArea").style.display = "none";
+};
+
+carregarPerfil();
+</script>
+
+</body>
+</html>
